@@ -46,13 +46,16 @@
 
 **操作步骤**：
 1. 访客打开网站首页
-2. 看到 Hero Banner 轮播区（至少 3 条精选内容，自动轮播）
+2. 看到 Hero Banner 轮播区（至少 3 条精选内容，自动轮播，间隔 5 秒）
 3. 看到「近期热门电影」横向滚动卡片列表（至少 8 条）
 4. 看到「近期热门电视剧」横向滚动卡片列表（至少 8 条）
 5. 看到「近期热门动漫」模块，含「国漫」/「日漫」两个 Tab（各至少 8 条）
+6. 看到「高分榜入口」静态卡片区（跳转 `/rankings`）
+7. 看到「奖项专题入口」（奥斯卡/金马等图文卡片）
 
 **预期结果**：
 - 每个卡片显示封面图（2:3 比例）、标题、年份、评分
+- 无评分内容显示「X人想看」占位（参考豆瓣）
 - 页面在 1280px 宽度下无横向滚动条
 
 ---
@@ -63,13 +66,15 @@
 
 **操作步骤**：
 1. 访客进入 `/movies` 页面
-2. 选择类型「科幻」、地区「欧美」、年份「2023」
-3. 选择排序方式「综合评分」
-4. 翻到第 2 页
+2. 在平铺 Tag 筛选栏中点击类型「科幻」、地区「欧美」、年代「2020s」
+3. 在语言下拉中选择「英语」，评分区间选择「8分+」
+4. 选择排序方式「综合评分」
+5. 翻到第 2 页
 
 **预期结果**：
-- URL 中包含对应 query params（如 `?genre=sci-fi&region=us&year=2023&sort=score&page=2`）
+- URL 中包含对应 query params（如 `?genre=sci-fi&region=us&decade=2020s&lang=en&score=8&sort=score&page=2`）
 - 页面展示符合条件的电影，每页最多 24 条
+- 已选中的 Tag 高亮显示（橙色背景），未选中为灰色
 - 分页组件正常工作
 
 ---
@@ -80,15 +85,21 @@
 
 **操作步骤**：
 1. 访客进入 `/movies/123`
-2. 查看基础信息区域
-3. 点击演员头像
-4. 点击「展开」查看完整剧情简介
+2. 查看基础信息区域（Hero Section）
+3. 查看豆瓣5星分布进度条
+4. 点击演员头像
+5. 点击「展开」查看完整剧情简介
+6. 点击预告片缩略图
+7. 查看奖项区块
 
 **预期结果**：
-- 页面顶部展示横幅背景图（模糊处理）+ 海报 + 基础信息
-- 基础信息包含：中英文标题、豆瓣评分、IMDB 评分、上映日期、片长、类型标签、导演、主演
+- 页面顶部展示横幅背景图（backdrop 模糊处理）+ 海报 + 基础信息
+- 基础信息包含：中英文标题、别名、豆瓣评分 + 5星分布进度条、IMDB 评分、时光网分项评分（有数据时显示）、上映日期（多地区）、片长、类型标签、导演、主演
+- 5星分布以进度条形式展示（5星X% / 4星X% / 3星X% / 2星X% / 1星X%）
 - 点击演员头像跳转 `/people/[id]`
 - 剧情简介超过 150 字时默认折叠，点击「展开」显示全文
+- 预告片区块支持多类型（正式预告/花絮/幕后），点击播放
+- 奖项区块：获奖用金色标识，提名用灰色标识，超过 5 条折叠显示「查看全部 X 项」
 - `<title>` 格式为：`{影片名} ({年份}) - 影视网`
 
 ---
@@ -98,14 +109,17 @@
 **前置条件**：数据库中有多种类型的内容
 
 **操作步骤**：
-1. 访客点击顶部导航搜索图标
-2. 输入关键词「星际穿越」并按回车
-3. 在搜索结果页切换到「电影」Tab
+1. 访客点击顶部导航搜索图标，展开搜索框
+2. 输入「星际」，查看实时 autocomplete 下拉提示
+3. 按回车跳转搜索结果页
+4. 在搜索结果页切换到「电影」Tab
 
 **预期结果**：
-- 跳转至 `/search?q=星际穿越`
-- 结果分 Tab 显示：全部 / 电影 / 电视剧 / 动漫 / 影人
-- 每条结果显示封面缩略图、标题、年份、类型
+- 输入时下拉提示按类型分组显示（电影 / 影人），每组最多 3 条，末尾显示「查看全部结果」
+- 跳转至 `/search?q=星际`
+- 结果 Tab 显示各类型数量，如「全部(32) | 电影(18) | 电视剧(8) | 动漫(3) | 影人(3)」
+- 无结果的 Tab 置灰不可点击
+- 每条结果显示封面缩略图、标题、年份、类型、简介前 60 字
 - 无结果时显示「未找到与「{keyword}」相关的内容」
 
 ---
@@ -139,6 +153,23 @@
 - 内容直接写入正式表（状态 `published`），无需审核
 - 跳转至该条目编辑页，显示「创建成功」提示
 - 必填字段为空时提交按钮不可用，显示行内错误提示
+
+### 场景 7：访客浏览奖项专题页
+
+**前置条件**：数据库中已有奥斯卡奖项数据
+
+**操作步骤**：
+1. 访客进入 `/awards/oscar`
+2. 查看奖项简介与历届列表
+3. 点击「第96届」进入届次页
+4. 点击「下一届」导航
+
+**预期结果**：
+- 奖项主页展示：奖项名称（中英文）、简介、官网链接、历届下拉列表
+- 届次页按奖项类别分组展示（最佳影片 / 最佳导演 / 最佳男主角等）
+- 每条记录显示：影片封面 + 片名（链接）+ 相关人员（链接）+ 获奖/提名标识
+- 获奖条目金色高亮，提名条目灰色
+- 「上一届 / 下一届」导航正常工作
 
 ---
 
@@ -176,9 +207,33 @@
 
 **FR-15**：动漫实体包含 `origin` 字段（`cn` 国漫 / `jp` 日漫 / `other`），列表页与首页均按此字段区分展示
 
-**FR-16**：影人页展示「合作过的影人」模块（合作次数最多的前 8 人）
+**FR-16**：影人页展示「合作过的影人」模块（合作次数最多的前 8 人，含头像 + 姓名 + 合作次数）
 
 **FR-17**：影人作品列表支持按职务 Tab 过滤（全部 / 导演 / 编剧 / 演员）
+
+**FR-31**：列表页筛选栏采用平铺 Tag 行展示（参考豆瓣），类型/地区各一行，选中 Tag 高亮，支持多选组合
+
+**FR-32**：列表页筛选支持语言维度（普通话 / 粤语 / 英语 / 日语 / 韩语 / 其他）
+
+**FR-33**：列表页筛选支持评分区间（9分+ / 8分+ / 7分+ / 不限）
+
+**FR-34**：列表页年份筛选支持年代段聚合（2020s / 2010s / 2000s / 90s / 更早），同时保留单年份精确选择
+
+**FR-35**：动漫列表额外支持原作类型筛选（原创 / 漫画改编 / 小说改编 / 游戏改编）
+
+**FR-36**：首页额外展示「高分榜入口」静态卡片区（跳转 `/rankings`）和「奖项专题入口」图文卡片
+
+**FR-37**：详情页豆瓣评分区块展示5星分布进度条（5星X% / 4星X% / 3星X% / 2星X% / 1星X%，含文字标注「力荐/推荐/还行/较差/很差」）
+
+**FR-38**：详情页预告片区块支持多类型分类（正式预告 / 花絮 / 幕后 / 片段），以 Tab 或标签区分
+
+**FR-39**：详情页图片区块支持横幅剧照与海报多张横向滚动展示，点击进入全屏灯箱浏览
+
+**FR-40**：详情页奖项区块获奖条目用金色标识，提名条目用灰色标识；超过 5 条时折叠，显示「查看全部 X 项」
+
+**FR-41**：内容实体支持关键词标签（Keyword），独立实体，与影片多对多关联，用于相似内容推荐
+
+**FR-42**：电视剧/动漫集实体包含 `still_cos_key`（剧照）字段，季实体包含 `vote_average` 字段
 
 ### 搜索
 
@@ -186,11 +241,19 @@
 
 **FR-19**：搜索结果按相关度排序，支持按类型 Tab 过滤
 
+**FR-43**：搜索框输入时展示实时 autocomplete 下拉提示，按类型分组（电影 / 影人），每组最多 3 条，末尾显示「查看全部结果」入口
+
+**FR-44**：搜索结果 Tab 显示各类型数量（如「电影(18)」），无结果的 Tab 置灰不可点击
+
 ### 排行榜
 
 **FR-20**：提供热门榜（按近 7 日访问量）与高分榜（按评分），每日定时更新
 
 **FR-21**：排行榜支持分类型榜单（按类型 + 评分筛选），每个榜单展示前 50 条
+
+**FR-45**：排行榜提供「电影 Top 100」固定高分榜（按豆瓣评分排序，设最低评分人数门槛，参考豆瓣 Top 250 模式）
+
+**FR-46**：排行榜 1-3 名使用金/银/铜特殊样式标识，4 名及以后使用普通数字
 
 ### 数据管理
 
@@ -226,34 +289,46 @@
 | title_cn | 中文标题 |
 | title_original | 原文标题 |
 | title_aliases | 别名数组 |
+| tagline | 宣传语（如有） |
 | synopsis | 剧情简介 |
 | genres | 类型标签数组 |
 | region | 制片地区数组 |
 | language | 语言数组 |
-| release_dates | 多地区上映日期（JSONB） |
+| release_dates | 多地区上映日期（JSONB，含 type 枚举：首映/限定公映/正式公映/数字/实体/电视） |
 | durations | 多版本片长（JSONB） |
 | douban_score | 豆瓣评分 |
 | douban_rating_count | 豆瓣评分人数 |
-| douban_rating_dist | 豆瓣5星分布（JSONB） |
+| douban_rating_dist | 豆瓣5星分布（JSONB，含「力荐/推荐/还行/较差/很差」百分比） |
 | imdb_score | IMDB 评分 |
 | imdb_id | IMDB 编号 |
-| mtime_score_* | 时光网分项评分（音乐/画面/导演/故事/表演） |
+| mtime_score_music | 时光网音乐评分 |
+| mtime_score_visual | 时光网画面评分 |
+| mtime_score_director | 时光网导演评分 |
+| mtime_score_story | 时光网故事评分 |
+| mtime_score_performance | 时光网表演评分 |
 | poster_cos_key | 海报 COS 路径 |
-| backdrop_cos_key | 横幅 COS 路径 |
-| trailer_url | 预告片链接 |
+| backdrop_cos_key | 横幅 COS 路径（主图） |
+| extra_backdrops | 额外剧照 COS 路径数组 |
+| extra_posters | 额外海报 COS 路径数组 |
+| trailer_url | 主预告片链接 |
 | production_companies | 出品公司数组 |
 | distributors | 发行公司数组 |
 | franchise_id | 所属系列 ID |
+| popularity | 热度分（用于热门榜排序，定时更新） |
 | status | published / draft |
 | deleted_at | 软删除时间戳 |
 
 ### TVSeries / Anime（电视剧 / 动漫）
 
 在 Movie 基础字段上额外包含：
-- `air_status`：连载中 / 已完结
+- `air_status`：连载中 / 已完结 / 制作中 / 已取消
 - `first_air_date`：首播日期
+- `last_air_date`：最近播出日期
+- `next_episode_info`：下一集信息（JSONB，含预计播出日期）
+- `number_of_seasons`：总季数
+- `number_of_episodes`：总集数
 - `production_companies`：出品公司
-- Anime 额外：`origin`（cn/jp/other）、`studio`（制作公司）、`source_material`（原作来源）
+- Anime 额外：`origin`（cn/jp/other）、`studio`（制作公司）、`source_material`（原创/漫画改编/小说改编/游戏改编）
 
 ### TVSeason / AnimeSeason（季）
 
@@ -261,12 +336,27 @@
 |------|------|
 | id | 主键 |
 | series_id / anime_id | 所属剧集/动漫 ID |
-| season_number | 季序号 |
+| season_number | 季序号（0 为特别篇） |
 | name | 季名 |
 | episode_count | 集数 |
-| first_air_date | 首播年份 |
+| first_air_date | 首播日期 |
 | poster_cos_key | 季海报 |
 | overview | 季简介 |
+| vote_average | 季均分 |
+
+### TVEpisode / AnimeEpisode（集）
+
+| 字段 | 说明 |
+|------|------|
+| id | 主键 |
+| season_id | 所属季 ID |
+| episode_number | 集序号 |
+| name | 集标题 |
+| air_date | 播出日期 |
+| overview | 集简介 |
+| duration_min | 时长（分钟） |
+| still_cos_key | 剧照 COS 路径 |
+| vote_average | 单集评分 |
 
 ### Person（影人）
 
@@ -281,11 +371,14 @@
 | death_date | 去世日期（可空） |
 | birth_place | 出生地 |
 | nationality | 国籍 |
-| professions | 职业标签数组 |
+| height_cm | 身高（厘米，可空） |
+| professions | 职业标签数组（director / writer / actor / producer / voice_actor / ...） |
 | biography | 个人简介 |
 | imdb_id | IMDB 编号 |
-| family_members | 家庭成员（JSONB） |
+| family_members | 家庭成员（JSONB，格式：`[{name, relation}]`） |
 | avatar_cos_key | 头像 COS 路径 |
+| popularity | 热度分（定时更新） |
+| deleted_at | 软删除时间戳 |
 
 ### Credit（演职员关联）
 
@@ -295,9 +388,31 @@
 | person_id | 影人 ID |
 | content_type | movie / tv / anime |
 | content_id | 内容 ID |
-| role | director / writer / actor / producer / ... |
-| character_name | 角色名 |
+| role | director / writer / actor / producer / cinematographer / editor / composer / ... |
+| department | 所属部门（Directing / Writing / Acting / Production / Camera / Sound / Art / ...） |
+| character_name | 角色名（演员专用） |
 | display_order | 显示顺序 |
+
+### Keyword（关键词标签）
+
+| 字段 | 说明 |
+|------|------|
+| id | 主键 |
+| name | 关键词名称 |
+
+通过 `ContentKeyword` 关联表与 Movie / TVSeries / Anime 多对多关联，用于内容发现与相似推荐。
+
+### MediaVideo（视频资源）
+
+| 字段 | 说明 |
+|------|------|
+| id | 主键 |
+| content_type | movie / tv / anime |
+| content_id | 内容 ID |
+| title | 视频标题 |
+| url | 视频链接（YouTube / 优酷 / B站等） |
+| type | trailer（正式预告）/ teaser（预告）/ clip（片段）/ featurette（花絮）/ behind_the_scenes（幕后）/ bloopers（NG片段） |
+| published_at | 发布日期 |
 
 ### AwardEvent / AwardCeremony / AwardNomination（奖项三级结构）
 
