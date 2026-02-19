@@ -1,0 +1,9 @@
+[     235ms] [ERROR] TypeError: Cannot read properties of null (reading 'nameCn')
+    at a.i (http://s0.mtime.cn/dist/people/1764141947728/bundle.a5dfbf60f2c3dd4a046f.js:2:171212)
+    at t._render (http://s0.mtime.cn/dist/people/1764141947728/bundle.a5dfbf60f2c3dd4a046f.js:2:37129)
+    at a.i (http://s0.mtime.cn/dist/people/1764141947728/bundle.a5dfbf60f2c3dd4a046f.js:2:70005)
+    at hn.get (http://s0.mtime.cn/dist/people/1764141947728/bundle.a5dfbf60f2c3dd4a046f.js:2:28493)
+    at hn.run (http://s0.mtime.cn/dist/people/1764141947728/bundle.a5dfbf60f2c3dd4a046f.js:2:29377)
+    at fn (http://s0.mtime.cn/dist/people/1764141947728/bundle.a5dfbf60f2c3dd4a046f.js:2:27485)
+    at Array.<anonymous> (http://s0.mtime.cn/dist/people/1764141947728/bundle.a5dfbf60f2c3dd4a046f.js:2:14176)
+    at Qt (http://s0.mtime.cn/dist/people/1764141947728/bundle.a5dfbf60f2c3dd4a046f.js:2:13619) @ http://s0.mtime.cn/dist/people/1764141947728/bundle.a5dfbf60f2c3dd4a046f.js:1
