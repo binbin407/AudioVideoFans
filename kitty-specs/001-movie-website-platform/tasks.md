@@ -3,9 +3,9 @@
 **Inputs**: Design documents from `kitty-specs/001-movie-website-platform/`
 **Prerequisites**: plan.md ✓, spec.md ✓, data-model.md ✓, contracts/ ✓, quickstart.md ✓
 
-**Tests**: WP27 (backend xUnit, ≥80% coverage) and WP28 (frontend Vitest, key components) added per constitution requirement. Subtasks T116–T125 cover test setup, domain unit tests, application service tests, repository integration tests, and component tests.
+**Tests**: WP27 (backend xUnit, ≥80% coverage), WP28 (frontend Vitest, key components), and WP29 (crawler pytest, pipeline + spider tests) added per constitution requirement. Subtasks T116–T130 cover test setup, domain unit tests, application service tests, repository integration tests, component tests, and crawler pipeline tests.
 
-**Organization**: 125 fine-grained subtasks (T001–T125) grouped into 28 work packages (WP01–WP28). Each work package is independently deliverable in one focused session.
+**Organization**: 130 fine-grained subtasks (T001–T130) grouped into 29 work packages (WP01–WP29). Each work package is independently deliverable in one focused session.
 
 ---
 
@@ -495,8 +495,8 @@
 
 ## Work Package WP18: Movie Detail Page (Frontend) (Priority: P1) 🎯 MVP
 
-**Goal**: Implement the `/movies/[id]` detail page with all sections: Hero, rating bars, cast/crew, trailers, awards, franchise block, similar content, and image tab block.
-**Independent Test**: `<title>` is「复仇者联盟2 (2015) - 影视网」; franchise block not rendered when movie has no franchise; synopsis collapses at 150 chars with「展开」toggle; lightbox keyboard navigation works.
+**Goal**: Implement the `/movies/[id]` detail page with all sections: Hero, rating bars, cast/crew, trailers, awards, franchise block, similar content, image tab block, and full credits sub-page.
+**Independent Test**: `<title>` is「复仇者联盟2 (2015) - 影视网」; franchise block not rendered when movie has no franchise; synopsis collapses at 150 chars with「展开」toggle; lightbox keyboard navigation works; `/movies/1/credits` page renders all departments.
 **Prompt**: `tasks/WP18-movie-detail-page.md`
 **Estimated Size**: ~410 lines
 
@@ -506,11 +506,13 @@
 - [ ] T081 Cast grid (clickable avatars → `/people/[id]`), Synopsis (`SynopsisBlock.vue` — collapse >150 chars, 「展开/收起」toggle), Videos section (tabs by type: 正式预告/花絮/幕后/片段 — embed iframe or YouTube link)
 - [ ] T082 Awards block (`AwardBlock.vue` — gold icon for winners, grey for nominations, fold >5 with count link); Franchise block (`FranchiseBlock.vue` — render only when `franchise != null`, show series name link + 「第N部 / 共X部」); Similar content row (6 MediaCards, no render when empty array)
 - [ ] T083 Image tab block (reuse `ImageTabBlock.vue` from WP14: 剧照 + 海报 tabs, default to 剧照, count in tab label, hide empty tabs); page-level layout and responsive breakpoints verification
+- [ ] T126 Full credits page (`/movies/[id]/credits`): fetch `GET /api/v1/movies/:id/credits`; breadcrumb (电影名 → 全部演职员); `<title>` format: `{titleCn} 全部演职员 - 影视网`; one `<section>` per department (导演/编剧/主演/制片人/其他); 60×60px round avatars linking to `/people/:id`; 2-column grid on desktop, 1-column on mobile; hide departments with zero credits
 
 ### Implementation Notes
 - Backdrop blur: `filter: blur(8px); transform: scale(1.1)` on bg image + dark overlay (`bg-black/60`) — do not use CSS backdrop-filter (Safari compat issues)
 - `useHead()` or Vite plugin `vite-plugin-document-title` for `<title>` management in SPA mode
-- Cast grid: show top 20 via `/movies/:id` endpoint data; "查看全部演职员" link → `/movies/:id/credits`
+- Cast grid: show top 20 via `/movies/:id` endpoint data; "查看全部演职员" link → `/movies/:id/credits` (T126)
+- T126 credits page: avatar fallback is a grey circle placeholder; mobile = single-column, desktop = 2-column grid per department
 
 ### Dependencies
 - Depends on WP14 (ImageTabBlock, Lightbox, MediaCard), WP15 (layout)
@@ -744,6 +746,7 @@ WP26 (Observability) [depends on WP02 + WP14]
 
 WP27 (Backend xUnit Tests) [depends on WP02-WP11]
 WP28 (Frontend Vitest Tests) [depends on WP14-WP18]
+WP29 (Crawler pytest Tests) [depends on WP13]
 ```
 
 **Parallelization Highlights**:
@@ -805,6 +808,30 @@ WP28 (Frontend Vitest Tests) [depends on WP14-WP18]
 
 ### Dependencies
 - Depends on WP14 (components must exist), WP15 (SearchBar), WP16 (BannerCarousel), WP18 (SynopsisBlock)
+
+---
+
+## Work Package WP29: Crawler pytest Tests (Priority: P2)
+
+**Goal**: pytest test suite for all Scrapy pipelines and spider extraction logic. All tests run with zero real HTTP requests or DB connections; CI job `crawler pytest` passes.
+**Independent Test**: `cd crawler && pytest --cov=douban tests/` passes with zero failures; `pytest --collect-only` shows all test items with no import errors.
+**Prompt**: `tasks/WP29-crawler-pytest-tests.md`
+**Estimated Size**: ~330 lines
+
+### Included Subtasks
+- [ ] T127 pytest setup + fixtures (`conftest.py` with `fake_response()` helper wrapping HTML files as `HtmlResponse`, `mock_db` psycopg2 fixture, `pytest.ini`, 3 minimal HTML fixtures)
+- [ ] T128 Spider extraction tests — movie (title, score, genres, content_type, source_url), TV (air_status, first_air_date), anime (origin cn/jp)
+- [ ] T129 Pipeline unit tests — `DeduplicationPipeline` (pass new, drop duplicate, allow rejected resubmission), `PostgresPipeline` (INSERT statement, commit, connection close, JSON serialization)
+- [ ] T130 Settings + middleware tests — `test_download_delay_at_least_3()` FR-28 regression guard, `ROBOTSTXT_OBEY`, pipeline ordering assertion, UA rotation middleware
+
+### Implementation Notes
+- `fake_response()` in `conftest.py`: reads fixture file from `tests/fixtures/`, wraps as Scrapy `HtmlResponse` — no real HTTP
+- `mock_db` fixture patches `douban.pipelines.psycopg2.connect` via `pytest-mock`; mock chain: `conn.cursor().fetchone.return_value = (0,)`
+- T130 `test_download_delay_at_least_3()` is a regression guard: imports `douban.settings` and asserts `DOWNLOAD_DELAY >= 3`; CI will catch accidental `DOWNLOAD_DELAY = 1` regressions immediately
+- Fixture HTML files in `tests/fixtures/` should be minimal — only include HTML tags needed by spider CSS selectors
+
+### Dependencies
+- Depends on WP13 (Scrapy crawler must exist before tests can be written)
 
 ---
 
@@ -937,7 +964,12 @@ WP28 (Frontend Vitest Tests) [depends on WP14-WP18]
 | T123 | FilterBar + Pagination tests | WP28 | P2 | Yes |
 | T124 | SearchBar autocomplete tests (debounce, dropdown, keyboard) | WP28 | P2 | No |
 | T125 | BannerCarousel + SynopsisBlock tests (timer, empty state, collapse) | WP28 | P2 | No |
+| T126 | Full credits page /movies/:id/credits | WP18 | P1 | No |
+| T127 | pytest setup + HTML fixtures + conftest.py (fake_response, mock_db) | WP29 | P2 | No |
+| T128 | Spider extraction tests (movie title/score/genres, TV air_status, anime origin) | WP29 | P2 | Yes |
+| T129 | Pipeline unit tests (DeduplicationPipeline + PostgresPipeline) | WP29 | P2 | Yes |
+| T130 | Settings + middleware tests (DOWNLOAD_DELAY ≥3 regression guard, ROBOTSTXT_OBEY, UA rotation) | WP29 | P2 | No |
 
 ---
 
-> This tasks.md was generated by `/spec-kitty.tasks` and updated by `/spec-kitty.analyze` remediation. 28 work packages, 125 subtasks total.
+> This tasks.md was generated by `/spec-kitty.tasks` and updated by `/spec-kitty.analyze` remediation. 29 work packages, 130 subtasks total.

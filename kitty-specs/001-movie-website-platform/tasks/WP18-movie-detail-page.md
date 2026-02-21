@@ -10,6 +10,7 @@ subtasks:
 - T081
 - T082
 - T083
+- T126
 phase: Phase 4 - Frontend
 assignee: ''
 agent: ''
@@ -259,6 +260,36 @@ gap: 16
 - [ ] Similar section shows ≤6 cards
 - [ ] Section hidden when no similar movies
 - [ ] Similar fetched in parallel with main detail (not sequential)
+
+---
+
+### Subtask T126 – Full Credits Page (`/movies/:id/credits`)
+
+**Purpose**: Implement the "全部演职员" page referenced by FR-2, reachable via the "查看全部演职员" link on the detail page.
+
+**Steps**:
+1. `frontend/src/pages/movies/[id]/credits.vue` (route: `/movies/:id/credits`):
+   - Fetch `GET /api/v1/movies/:id/credits` on mount; response is credits grouped by department
+   - Page header: breadcrumb — 电影名(link to `/movies/:id`) → 全部演职员
+   - `<title>`: `{titleCn} 全部演职员 - 影视网`
+   - Render one `<section>` per department: 导演 / 编剧 / 主演 / 制片人 / 其他
+     - Department heading: `fontSize: 18, fontWeight: 700, color: #FFFFFF`
+     - Each credit row: avatar (`60×60px` round, `cornerRadius: 50%`) + name_cn + character_name (italic, `color: #6B6B70`)
+     - Avatar links to `/people/:id`; name links to `/people/:id`
+     - Placeholder avatar when `avatar_cos_key` is null (grey circle)
+2. If a department has zero credits, omit that section entirely (no empty heading).
+3. Reuse `cosUrl()` helper for avatar images; `loading="lazy"` on all avatars.
+4. On mobile: single column; on desktop: 2-column grid within each department.
+
+**Files**:
+- `frontend/src/pages/movies/[id]/credits.vue`
+
+**Validation**:
+- [ ] Page accessible via `/movies/123/credits`
+- [ ] Breadcrumb links back to `/movies/123`
+- [ ] `<title>` contains movie name + "全部演职员"
+- [ ] Departments with no credits are hidden
+- [ ] Avatar click navigates to `/people/:id`
 
 ---
 

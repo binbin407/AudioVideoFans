@@ -62,7 +62,7 @@ spec-kitty implement WP13 --base WP03
 - Crawler writes directly to PostgreSQL `pending_content` table (not via HTTP API) for performance
 - `raw_data` JSONB must match the shape expected by admin approve flow (WP11 T046)
 - Use `scrapy-playwright` for JS-rendered pages if needed; default to `scrapy` HTTP for static pages
-- Respect `robots.txt`; add 2-second delay between requests (`DOWNLOAD_DELAY = 2`)
+- Respect `robots.txt`; add 3-second delay between requests (`DOWNLOAD_DELAY = 3`)
 - Store COS image keys as URLs for now (admin manually uploads images; crawler stores original URLs in `raw_data`)
 
 ## Subtasks & Detailed Guidance
@@ -91,7 +91,7 @@ spec-kitty implement WP13 --base WP03
    ```
 2. `settings.py` key settings:
    ```python
-   DOWNLOAD_DELAY = 2
+   DOWNLOAD_DELAY = 3
    ROBOTSTXT_OBEY = True
    ITEM_PIPELINES = {
        'douban.pipelines.DeduplicationPipeline': 100,
@@ -281,7 +281,7 @@ spec-kitty implement WP13 --base WP03
 
 | Risk | Mitigation |
 |------|-----------|
-| Douban blocks scrapers (rate limiting / CAPTCHA) | `DOWNLOAD_DELAY=2`; rotate User-Agent via middleware; use `scrapy-playwright` if JS challenge |
+| Douban blocks scrapers (rate limiting / CAPTCHA) | `DOWNLOAD_DELAY=3`; rotate User-Agent via middleware; use `scrapy-playwright` if JS challenge |
 | HTML structure changes break selectors | Use multiple fallback selectors; log parse warnings |
 | `raw_data` shape mismatch with admin approve flow | Document expected shape in `items.py`; validate in NormalizationPipeline |
 
