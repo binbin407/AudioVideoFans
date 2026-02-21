@@ -59,6 +59,64 @@ spec-kitty implement WP24 --base WP23
 - Franchise movie order: drag-and-drop list using TDesign `t-table` drag feature or `vuedraggable`
 - Reuse `MovieFormPage` patterns (same TDesign form structure)
 
+## Design Reference
+
+**Source**: `design/design.pen` — frames `iYIVr` (TV List), `pykFh` (TV Edit), `rY4aZ` (Anime List), `wccaw` (Anime Edit), `GPWLA` (Person List), `KvAIc` (Person Edit)
+
+All admin pages share the sidebar + main content layout from WP23. Only page-specific differences noted below.
+
+### TV Series Admin List (frame `iYIVr`)
+
+Same table pattern as Movie List (WP23) with extra columns:
+- **Air Status** column: badge — 连载中 `#22c55e`, 已完结 `#6B6B70`, 待播 `#3b82f6`
+- **Seasons** column: "N 季" text, `color: #B8B9B6`
+- Toolbar filter: adds "播出状态" dropdown alongside status/type filters
+
+### TV Series Edit Form (frame `pykFh`)
+
+Same form section structure as Movie Edit (WP23) plus:
+- **播出信息** section: 首播日期 / 完结日期 / 播出状态 / 播出平台 / 集数
+- **季 & 集管理** section (nested `t-table`):
+  - Season rows: 季号 / 标题 / 集数 / 首播日期 / 操作(编辑/删除)
+  - "添加季" button: `fill: transparent`, `border: 1px dashed #2A2A2E`, `color: #6B6B70`
+  - Expand season row → episode sub-table inline
+
+### Anime Admin List (frame `rY4aZ`)
+
+Same as TV list with extra columns:
+- **来源** column: 原创/漫画改编/小说改编/游戏改编, `fontSize: 12, color: #B8B9B6`
+- **制作公司** column: studio name
+
+### Anime Edit Form (frame `wccaw`)
+
+Same as TV Edit plus:
+- **动漫信息** section: 来源类型 / 原著名称 / 制作公司 / 国别(国漫/日漫)
+- Voice cast section: same as regular cast but labeled "声优"
+
+### Person Admin List (frame `GPWLA`)
+
+Toolbar: search + 职业 filter (导演/演员/编剧/配音) + 地区 filter
+
+Table columns: 头像(48px round) / 姓名 / 职业 / 国籍 / 作品数 / 操作
+
+### Person Edit Form (frame `KvAIc`)
+
+Form sections:
+1. **基本信息**: 中文名 / 英文名 / 性别 / 出生日期 / 国籍 / 职业(多选)
+2. **简介**: textarea
+3. **照片管理**: multi-image upload grid
+   - Upload area: `cornerRadius: 8`, `border: 2px dashed #2A2A2E`, `fill: #111114`
+   - Uploaded photo: `80×80px`, `cornerRadius: 8`, delete icon overlay on hover
+   - "设为头像" button on first photo
+
+### Franchise Admin
+
+No dedicated design frame — reuse Movie List table pattern:
+- Table columns: 系列名 / 电影数 / 创建时间 / 操作
+- Edit form: 系列名 / 描述 + movie order drag-and-drop list
+  - Drag handle: `⠿` icon, `color: #4A4A50`
+  - Movie row: poster (40×60px) + title + year + remove button
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T103 – TV Series Admin CRUD

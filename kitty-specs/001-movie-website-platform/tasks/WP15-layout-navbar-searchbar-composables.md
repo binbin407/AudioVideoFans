@@ -61,6 +61,78 @@ spec-kitty implement WP15 --base WP14
 - Filter state synced to URL query params (so filters survive page refresh / sharing)
 - `usePageMeta` uses `@vueuse/head` or direct `document.title` assignment
 
+## Design Reference
+
+**Source**: `design/design.pen` — Navigation frame present on every public page
+
+### Navbar (frame `F7Irx` / `pM3hn` / `nZMFc` etc.)
+
+```
+height: 64px
+padding: [0, 60]          ← 60px horizontal padding
+background: #0B0B0ECC     ← semi-transparent dark (backdrop-blur recommended)
+border-bottom: 1px solid #2A2A2E
+position: sticky, top: 0, z-index: 50
+justify-content: space-between
+```
+
+- **Left side** (`navLeft`): logo group + nav links, `gap: 32px`
+  - Logo group: `#FF8400` movie icon (Material Symbols Rounded `movie`, 20px) + text "影视网" `fontSize: 14, fontWeight: 600, color: #FF8400`, `gap: 8px`
+  - Nav links: 首页 / 电影 / 剧集 / 动漫 / 排行榜, `gap: 24px`, `fontSize: 14`, `color: #B8B9B6`; active link `color: #FFFFFF`
+- **Right side** (`navRight`): search icon `Material Symbols Rounded "search"`, `color: #B8B9B6`, `24×24px`, `gap: 16px`
+
+### SearchBar (frame `ivRXO` in Search Results page)
+
+```
+height: 52px
+background: #16161A
+cornerRadius: 12
+padding: [0, 20]
+border: 2px solid #FF8400   ← active/focused state
+gap: 12px
+```
+
+- Search icon: `#FF8400`, 22px
+- Input text: `fontSize: 16`, `color: #FFFFFF`
+- Clear icon: `#6B6B70`, 20px (Material Symbols Rounded `close`)
+
+### Autocomplete Dropdown (frame `YLk79`)
+
+```
+background: #16161A
+cornerRadius: 12
+border: 1px solid #2A2A2E
+layout: vertical
+```
+
+- Section title row: `padding: [10, 16]`, `color: #6B6B70`, `fontSize: 13`
+- Item row: `padding: [10, 16]`, `gap: 12px`; highlighted item `fill: #1E1E22`
+- Item: thumbnail (24×36px) + title + year
+
+### Footer (frame `7Glqi` / `oPG4g`)
+
+```
+height: 80px
+padding: [0, 60]
+border-top: 1px solid #2A2A2E
+background: #0B0B0E (public) / #0A0A0D (some pages)
+justify-content: space-between
+```
+
+- Left: logo icon + "影视网" `fontSize: 14, fontWeight: 600, color: #6B6B70` + copyright `fontSize: 12, color: #4A4A50`, `gap: 8px`
+- Right: 关于我们 / 联系方式 / 隐私政策, `fontSize: 12, color: #6B6B70`, `gap: 24px`
+
+### Breadcrumb (present on list/detail pages)
+
+```
+fontSize: 13
+gap: 8px
+```
+
+- Inactive crumb: `color: #6B6B70`
+- Separator `/`: `color: #4A4A50`
+- Current page: `color: #FFFFFF`
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T066 – AppLayout + Footer

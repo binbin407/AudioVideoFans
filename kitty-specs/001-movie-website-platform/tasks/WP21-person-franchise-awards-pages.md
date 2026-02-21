@@ -60,6 +60,71 @@ spec-kitty implement WP21 --base WP15
 - Collaborator cards: avatar + name + co-work count
 - Awards: winner nominations have gold star/trophy icon; non-winners are grey
 
+## Design Reference
+
+**Source**: `design/design.pen` — frames `Msc97` (Person Detail), `b5B0U` (Franchise Detail), `FlG1G` (Awards)
+
+### Person Detail (frame `Msc97`)
+
+**Profile Hero**:
+- Backdrop: full-width `480px` height with gradient overlay (same pattern as movie detail)
+- Person card: `layout: horizontal`, `gap: 40px`, positioned at `x:60, y:100`
+  - Portrait: `200×260px`, `cornerRadius: 12`, shadow
+  - Info column: `layout: vertical`, `gap: 12px`
+    - Name (CN): `fontSize: 32, fontWeight: 700, color: #FFFFFF`
+    - Name (original): `fontSize: 16, color: #B8B9B6`
+    - Meta row: nationality + birthdate + profession tags, `gap: 12px`, `fontSize: 14, color: #B8B9B6`
+
+**Biography Section**:
+- Title: `fontSize: 20, fontWeight: 700, color: #FFFFFF`
+- Text: `fontSize: 14, color: #B8B9B6, lineHeight: 1.8`
+- "展开简介 ▼": `fontSize: 13, color: #FF8400`
+
+**Works Tabs**:
+- Tab bar: `gap: 0`, `border-bottom: 1px solid #2A2A2E`
+- Active tab: `color: #FFFFFF`, `border-bottom: 2px solid #FF8400`
+- Inactive tab: `color: #6B6B70`
+- Tab labels: 全部 / 导演 / 编剧 / 演员 (with count badge)
+- Count badge: `cornerRadius: 10`, `fill: #2A2A2E`, `padding: [2, 8]`, `fontSize: 11`
+- Works grid: same 6-column MediaCard grid
+
+**Collaborators Section**:
+- Grid: 8 columns, `gap: 16px`
+- Each card: avatar (80×80px, `borderRadius: 50%`) + name + co-work count
+- Co-work count: `fontSize: 12, color: #6B6B70`
+
+**Photo Wall**:
+- Grid: `grid-cols-4`, `gap: 8px`
+- Each photo: `aspect-[3/4]`, `object-cover`, `cornerRadius: 8`
+- "查看全部照片 →": `color: #FF8400`
+
+### Franchise Detail (frame `b5B0U`)
+
+**Header**:
+- Franchise title: `fontSize: 28, fontWeight: 700, color: #FFFFFF`
+- Subtitle/tagline: `fontSize: 16, color: #8E8E93`
+- Description: `fontSize: 14, color: #B8B9B6, lineHeight: 1.8`
+
+**Movies in Franchise**:
+- Layout: vertical list (not grid), each entry `padding: [20, 0]`, `border-bottom: 1px solid #2A2A2E`
+- Entry: poster (80×120px) + title + year + synopsis excerpt + score
+- Phase/arc grouping: phase header `fontSize: 16, fontWeight: 600, color: #FF8400`
+
+### Awards (frame `FlG1G`)
+
+**Award Event Page** (`/awards/:slug`):
+- Hero: award logo/banner, `height: 320px`
+- Ceremony list: cards in a grid, each `cornerRadius: 12`, `fill: #16161A`, `border: 1px solid #2A2A2E`, `padding: 20`
+- Ceremony card: year + edition number + date + nominee count
+
+**Ceremony Page** (`/awards/:slug/:edition`):
+- Category sections: `layout: vertical`, `gap: 32px`
+- Category title: `fontSize: 18, fontWeight: 700, color: #FFFFFF`, `border-bottom: 1px solid #2A2A2E`
+- Nomination row: `padding: [16, 0]`, `gap: 16px`
+  - Winner row: `fill: #FF840008`, winner badge `#FF8400` trophy icon
+  - Non-winner: standard row, `color: #B8B9B6`
+- Nominee: poster thumbnail (40×60px) + title + person name
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T091 – Person Detail Page

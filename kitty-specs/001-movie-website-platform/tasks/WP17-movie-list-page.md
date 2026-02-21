@@ -61,6 +61,102 @@ spec-kitty implement WP17 --base WP15
 - Filter sidebar collapses to a filter button + drawer on mobile
 - Genre options fetched from `GET /api/v1/movies/filters` (or hardcoded from spec)
 
+## Design Reference
+
+**Source**: `design/design.pen` — frame `ceslO` (Movie List - 电影列表页), width 1440px
+
+### Page Layout
+
+```
+layout: vertical
+fill: #0B0B0E
+```
+
+Content area (`1JmdX`):
+```
+padding: [32, 60, 40, 60]
+layout: vertical
+gap: 24
+```
+
+### Breadcrumb
+
+```
+gap: 8px
+fontSize: 13
+```
+- "首页": `color: #6B6B70`
+- "/": `color: #4A4A50`
+- "电影": `color: #FFFFFF`
+
+### Page Title
+
+```
+fontSize: 32
+fontWeight: 700
+color: #FFFFFF
+```
+
+### Filter Panel (frame `m5Vnm`)
+
+```
+cornerRadius: 12
+fill: #16161A
+border: 1px solid #2A2A2E
+padding: 24
+layout: vertical
+gap: 16
+width: fill_container
+```
+
+Filter rows (each `width: fill_container`, `alignItems: center`, `gap: 12`):
+1. **Genre Filter** — multi-select tag chips
+2. **Region Filter** — single-select chips (全部/中国大陆/香港/台湾/美国/英国/日本/韩国/其他)
+3. **Language Filter** — single-select chips (全部/普通话/粤语/英语/日语/韩语)
+4. **Year Filter** — range inputs or chip groups
+5. **Score Filter** — score range chips (全部/9分以上/8分以上/7分以上/6分以下)
+
+Filter chip style:
+- Default: `cornerRadius: 6`, `padding: [4, 12]`, `fill: transparent`, `border: 1px solid #2A2A2E`, `color: #B8B9B6`, `fontSize: 13`
+- Active: `fill: #FF840020`, `border: 1px solid #FF8400`, `color: #FF8400`
+
+### Sort Bar (frame `hfo8Q`)
+
+```
+justify-content: space-between
+width: fill_container
+alignItems: center
+```
+
+- Left (`UUAM6`): sort option buttons, `gap: 16px`
+  - Active sort: `color: #FFFFFF, fontWeight: 600`
+  - Inactive: `color: #6B6B70`
+- Right (`MRdif`): "共 2,486 部", `fontSize: 13, color: #6B6B70`
+
+### Movie Grid (frame `dhZGJ`)
+
+```
+display: grid
+grid-template-columns: repeat(6, 1fr)
+gap: 16px
+width: fill_container
+```
+
+Each card (`yCTX4` etc.): `layout: vertical`, `gap: 10`, `width: fill_container`
+
+### Pagination (frame `vm6BO`)
+
+```
+justify-content: center
+padding: [24, 0]
+gap: 8px
+```
+
+Buttons: `36×36px`, `cornerRadius: 8`
+- Active: `fill: #FF8400`, `color: #FFFFFF`
+- Inactive: `border: 1px solid #2A2A2E`, `color: #FFFFFF`
+- Prev/Next: same border style, chevron icons
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T075 – Movie List API + Store

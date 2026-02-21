@@ -58,6 +58,63 @@ spec-kitty implement WP19 --base WP15
 - TV list card shows `air_status` badge (连载中=green, 已完结=grey, 待播=blue)
 - Seasons accordion: collapsed by default; click to expand shows season overview + episode count
 - Season detail: episodes in a table/list with episode number, title, air date, duration
+
+## Design Reference
+
+**Source**: `design/design.pen` — frames `WWclq` (TV Series List), `tqMcW` (TV Series Detail)
+
+### TV Series List (frame `WWclq`)
+
+Same layout as Movie List (`ceslO`) with these differences:
+
+**Filter Panel** (`7P5Zw`) — 6 filter rows:
+1. Genre Filter
+2. **Air Status Filter** (extra vs movies) — chips: 全部 / 连载中 / 已完结 / 待播
+   - 连载中: `color: #22c55e`, `border-color: #22c55e`
+   - 已完结: `color: #6B6B70`, `border-color: #2A2A2E`
+   - 待播: `color: #3b82f6`, `border-color: #3b82f6`
+3. Region Filter
+4. Language Filter
+5. Year Filter
+6. Score Filter
+
+Grid (`euyzF`): 6 columns, `gap: 16px` — same as movie grid
+
+### TV Series Detail (frame `tqMcW`)
+
+**Detail Hero** (`bF5Pa`): identical structure to movie detail hero
+- Height: `480px`, backdrop + bottom gradient + left gradient + overlay
+- Poster: `240×340px`, `cornerRadius: 12`, shadow
+- Info column: `layout: vertical`, `gap: 16px`
+
+**Main Content** (`pmWCU`): `padding: [32, 60, 40, 60]`, `layout: vertical`, `gap: 40`
+
+**Ratings** (`exJIL`): Douban + IMDB cards, `gap: 32` (no Mtime for TV)
+
+**Synopsis** (`xgbIR`): same as movie — `fontSize: 14, color: #B8B9B6, lineHeight: 1.8`
+
+**Seasons Section** (`4jzqG`):
+```
+layout: vertical
+gap: 16
+```
+- Header (`KEEVd`): "全 N 季" title + sort/filter, `justify-content: space-between`
+- Season list (`nGlik`): `layout: vertical`, `gap: 12`
+- Each season row: `cornerRadius: 8`, `fill: #16161A`, `border: 1px solid #2A2A2E`, `padding: [16, 20]`
+  - Expanded state: shows season poster + synopsis + episode count
+  - Collapsed: shows season number + title + episode count + air date range
+
+**Cast Section** (`9S4WD`): same pattern as movie cast
+
+**Similar Content** (`Sidhd`): same pattern as movie similar
+
+### TV Season Detail (frame `m8Owi`)
+
+- Breadcrumb: 4 levels — 首页 / 电视剧 / {剧名} / 第N季
+- Season header: poster (160×220px) + season info column
+- Episode list: `layout: vertical`, `gap: 0`, each row `border-bottom: 1px solid #2A2A2E`
+  - Episode row: `padding: [16, 20]`, episode code (S01E01) `color: #FF8400`, title, air date, duration
+- Prev/Next season nav: bottom of page, `justify-content: space-between`
 - `next_episode_info` banner: yellow strip at top of detail page when `air_status='airing'`
 
 ## Subtasks & Detailed Guidance

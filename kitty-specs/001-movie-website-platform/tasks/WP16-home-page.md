@@ -61,6 +61,91 @@ spec-kitty implement WP16 --base WP15
 - Horizontal scroll rows: `overflow-x-auto` with `flex gap-4`; hide scrollbar on desktop
 - Rank badges: 1=gold(`#FFD700`), 2=silver(`#C0C0C0`), 3=bronze(`#CD7F32`), 4+=grey number
 
+## Design Reference
+
+**Source**: `design/design.pen` — frame `UmLXy` (Homepage - 首页), width 1440px
+
+### Hero Banner (frame `Fmlca`)
+
+```
+height: 560px
+layout: none (absolute positioning)
+clip: true
+width: fill_container
+```
+
+Layers (bottom to top):
+1. **Backdrop image** (`snoDi`): `1440×560px`, `object-cover`
+2. **Bottom gradient** (`Hnyj4`): `linear-gradient(0deg, #0B0B0EFF 60%, #0B0B0E00 100%)`
+3. **Left gradient** (`SX4V9`): `linear-gradient(90deg, #0B0B0EDD 0%, #0B0B0E00 60%)`
+4. **Hero content** (`xd3yU`): positioned at `x:60, y:200`, `width: 560px`, `layout: vertical`, `gap: 16px`
+   - Tag chip: genre badge, `gap: 8px`
+   - Title: `fontSize: 42, fontWeight: 700, color: #FFFFFF, lineHeight: 1.2`
+   - Subtitle (original title): `fontSize: 18, color: #B8B9B6`
+   - Meta row (year/rating/duration): `gap: 16px`, `alignItems: center`
+   - Description: `fontSize: 14, color: #8E8E93, lineHeight: 1.6, width: 480px`
+5. **Dot indicators** (`S1iKX`): positioned at `x:60, y:520`, `gap: 8px`
+   - Active dot: `#FF8400`, `24×4px`, `borderRadius: 2px`
+   - Inactive dot: `#4A4A50`, `8×4px`, `borderRadius: 2px`
+
+### Content Sections Layout
+
+Page is `layout: vertical`, `fill: #0B0B0E`
+
+| Section | Frame | Padding | Gap |
+|---------|-------|---------|-----|
+| 近期热门电影 | `5mGvx` | `[40, 60]` | 24 |
+| 近期热门电视剧 | `ozzuA` | `[20, 60, 40, 60]` | 24 |
+| 近期热门动漫 | `KGjPu` | `[20, 60, 40, 60]` | 24 |
+| 高分榜 & 奖项入口 | `56Yx9` | `[20, 60, 40, 60]` | 24 |
+
+### Section Header Pattern
+
+```
+justify-content: space-between
+width: fill_container
+```
+- Title: `fontSize: 24, fontWeight: 700, color: #FFFFFF`
+- "查看更多" link: `gap: 4px`, `alignItems: center`, text `#B8B9B6` + arrow icon `#B8B9B6`
+
+### Card Grid (8 columns)
+
+```
+display: grid
+grid-template-columns: repeat(8, 1fr)
+gap: 16px
+width: fill_container
+```
+
+Each card: `layout: vertical`, `gap: 10`, `width: fill_container`
+
+### Rankings Entry Card (frame `s6ki1`)
+
+```
+cornerRadius: 12
+fill: #16161A
+border: 1px solid #2A2A2E
+padding: 32
+height: 200px
+layout: vertical
+justify-content: center
+gap: 12
+```
+
+- Trophy icon: `#FF8400`, 40×40px (Material Symbols Rounded `trophy`)
+- Title: `fontSize: 24, fontWeight: 700, color: #FFFFFF`
+- Description: `fontSize: 14, color: #8E8E93, lineHeight: 1.5`
+- CTA link: `gap: 4px`, `color: #FF8400`
+
+### Awards Entry Cards (frame `7fx4Y`, 3 cards, gap 16)
+
+Each award card: `cornerRadius: 12`, `height: 200px`, `padding: 24`, `border: 1px solid #2A2A2E`, `layout: vertical`, `justify-content: end`, `gap: 8`
+
+Gradient fills:
+- 奥斯卡: `linear-gradient(0deg, #1A1A1EFF 70%, #FF840033 100%)`
+- 戛纳: `linear-gradient(0deg, #1A1A1EFF 70%, #6366F133 100%)`
+- 金马奖: `linear-gradient(0deg, #1A1A1EFF 70%, #32D58333 100%)`
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T071 – Home API Integration

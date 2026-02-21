@@ -62,6 +62,86 @@ spec-kitty implement WP22 --base WP15
 - SEO: `<meta name="robots" content="index,follow">` on all public pages; noindex on admin
 - `sitemap.xml`: static routes only (dynamic content pages not included — too many)
 
+## Design Reference
+
+**Source**: `design/design.pen` — frames `jQSVK` (Search Results), `Qh2Ss` (Rankings)
+
+### Search Results Page (frame `jQSVK`)
+
+**Search Bar** (top of page, frame `ivRXO`):
+```
+height: 52px
+background: #16161A
+cornerRadius: 12
+padding: [0, 20]
+border: 2px solid #FF8400   ← active state
+gap: 12px
+width: fill_container
+```
+- Search icon: `#FF8400`, 22px (Material Symbols Rounded `search`)
+- Input: `fontSize: 16, color: #FFFFFF, placeholder-color: #4A4A50`
+- Clear button: `#6B6B70`, 20px (Material Symbols Rounded `close`)
+
+**Type Filter Tabs** (below search bar):
+```
+gap: 0
+border-bottom: 1px solid #2A2A2E
+```
+- Tab: `padding: [12, 20]`, `fontSize: 14`
+- Active: `color: #FFFFFF`, `border-bottom: 2px solid #FF8400`, `fontWeight: 600`
+- Inactive: `color: #6B6B70`
+- Count badge: `cornerRadius: 10`, `fill: #2A2A2E`, `padding: [2, 8]`, `fontSize: 11, color: #B8B9B6`
+- Tabs: 全部 / 电影 / 电视剧 / 动漫 / 影人
+
+**Result Items**:
+```
+layout: vertical
+gap: 0
+```
+Each item: `padding: [20, 0]`, `border-bottom: 1px solid #2A2A2E`, `gap: 16px`, `layout: horizontal`
+- Poster/avatar: `60×90px` (media) or `60×60px` round (person), `cornerRadius: 8`
+- Info: title `fontSize: 16, fontWeight: 600, color: #FFFFFF` + meta `fontSize: 13, color: #6B6B70`
+- Score badge: right-aligned, `color: #22c55e` (≥8.0) / `#eab308` (≥6.0)
+
+**Empty State**:
+- Icon: `#4A4A50`, 48px
+- Text: "没有找到相关内容", `fontSize: 16, color: #6B6B70`
+- Suggestion: `fontSize: 14, color: #4A4A50`
+
+### Rankings Page (frame `Qh2Ss`)
+
+**Category Tabs** (horizontal scroll):
+```
+gap: 8px
+padding: [0, 60]
+border-bottom: 1px solid #2A2A2E
+overflow-x: auto
+```
+- Tab chip: `cornerRadius: 20`, `padding: [8, 20]`, `fontSize: 14`
+- Active: `fill: #FF8400`, `color: #FFFFFF`
+- Inactive: `fill: #16161A`, `border: 1px solid #2A2A2E`, `color: #B8B9B6`
+- Tabs: 热门电影 / 热门剧集 / 热门动漫 / 高分电影 / 高分剧集 / 高分动漫 / 电影Top100
+
+**Rank List**:
+```
+layout: vertical
+gap: 0
+cornerRadius: 12
+fill: #16161A
+border: 1px solid #2A2A2E
+clip: true
+```
+Each rank row: `padding: [16, 20]`, `border-bottom: 1px solid #2A2A2E`, `gap: 16px`
+- Rank number: `width: 32px`, `fontSize: 20, fontWeight: 700`
+  - Rank 1: `color: #FFD700`, row `background: #FFD70008`
+  - Rank 2: `color: #C0C0C0`, row `background: #C0C0C008`
+  - Rank 3: `color: #CD7F32`, row `background: #CD7F3208`
+  - Rank 4+: `color: #4A4A50`
+- Poster: `48×72px`, `cornerRadius: 6`
+- Title: `fontSize: 16, fontWeight: 600, color: #FFFFFF`
+- Meta: year + genre, `fontSize: 13, color: #6B6B70`
+- Score: right-aligned, `fontSize: 18, fontWeight: 700, color: #22c55e`
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T095 – Search Results Page

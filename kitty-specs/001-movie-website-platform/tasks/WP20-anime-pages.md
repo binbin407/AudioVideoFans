@@ -58,6 +58,54 @@ spec-kitty implement WP20 --base WP15
 - Origin tabs are mutually exclusive (not multi-select): 全部/国漫(`cn`)/日漫(`jp`)
 - Source material filter: 全部/原创/漫画改编/小说改编/游戏改编 (single-select)
 - Voice actors section: separate from cast; shows character name prominently
+
+## Design Reference
+
+**Source**: `design/design.pen` — frames `WOq8S` (Anime List), `zJJHL` (Anime Detail)
+
+### Anime List (frame `WOq8S`)
+
+Same layout as Movie List with these differences:
+
+**Filter Panel** (`fC0iu`) — 7 filter rows (most of any list page):
+1. Genre Filter
+2. **Origin Filter** — tabs: 全部 / 国漫 / 日漫 (mutually exclusive, styled as tab buttons)
+3. **Source Filter** — 全部/原创/漫画改编/小说改编/游戏改编
+4. Region Filter
+5. Language Filter
+6. Year Filter
+7. Score Filter
+
+Grid (`Wi5SH`): 6 columns, `gap: 16px`
+
+### Anime Detail (frame `zJJHL`)
+
+**Detail Hero** (`zxYuj`): identical structure to TV series detail hero
+- Height: `480px`, same gradient layers
+- Poster: `240×340px`, `cornerRadius: 12`, shadow
+
+**Main Content** (`swcJY`): `padding: [32, 60, 40, 60]`, `layout: vertical`, `gap: 40`
+
+**Ratings** (`P3Y29`): Douban + IMDB (same as TV, no Mtime)
+
+**Synopsis** (`aJ1BO`): `fontSize: 14, color: #B8B9B6, lineHeight: 1.8`
+
+**Seasons Section** (`KMfam`): same accordion structure as TV series
+
+**Voice Cast Section** (`T7VCK`):
+- Label: "声优" (not "演员")
+- Cast grid (`ahjYG`): `gap: 16px`
+- Each card: voice actor avatar + name + character name (character name more prominent than actor name)
+- Character name: `fontSize: 14, fontWeight: 600, color: #FFFFFF`
+- Actor name: `fontSize: 12, color: #B8B9B6`
+
+**Similar Content** (`GddaQ`): same pattern as other detail pages
+
+### Anime Season Detail
+
+Reuses the same `SeasonDetailPage` component as TV series (same design frame `m8Owi`):
+- Breadcrumb: 首页 / 动漫 / {动漫名} / 第N季
+- Episode list: same structure, episode code `color: #FF8400`
 - Anime season detail: same structure as TV season detail but fetches from `/anime/:id/seasons/:n`
 
 ## Subtasks & Detailed Guidance

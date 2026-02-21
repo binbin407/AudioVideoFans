@@ -63,6 +63,79 @@ spec-kitty implement WP14 --base WP03
 - No UI component library for public frontend (custom Tailwind components only)
 - API base URL from `VITE_API_BASE_URL` env variable
 
+## Design Reference
+
+**Source**: `design/design.pen` (all public frontend frames share this design system)
+
+### Global Design Tokens
+
+```css
+/* Colors */
+--color-bg:          #0B0B0E   /* page background */
+--color-surface:     #16161A   /* cards, panels, filter boxes */
+--color-surface-alt: #111114   /* admin sidebar */
+--color-border:      #2A2A2E   /* all borders/dividers */
+--color-accent:      #FF8400   /* primary orange — active states, CTAs, scores */
+--color-text-primary:   #FFFFFF
+--color-text-secondary: #B8B9B6
+--color-text-muted:     #8E8E93
+--color-text-label:     #6B6B70
+--color-text-faint:     #4A4A50
+
+/* Rank badge backgrounds (very subtle) */
+--rank-gold:   #FFD70008
+--rank-silver: #C0C0C008
+--rank-bronze: #CD7F3208
+```
+
+```js
+// tailwind.config.js — extend colors
+colors: {
+  bg: '#0B0B0E',
+  surface: '#16161A',
+  border: '#2A2A2E',
+  accent: '#FF8400',
+}
+```
+
+### Typography
+
+- **Font family**: `Geist` (load via CDN or local — all design frames use Geist)
+  ```html
+  <!-- index.html -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+  ```
+- **Base font**: `font-family: 'Geist', sans-serif` on `body`
+- Common sizes: 42px (hero title), 32px (page title), 28px (section title), 24px (section header), 22px (admin page title), 20px (subsection), 18px (hero subtitle), 16px (body large), 14px (body), 13px (small/breadcrumb), 12px (footer)
+
+### Icon Library
+
+- **Material Symbols Rounded** — used for all icons
+  ```html
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
+  ```
+- Usage: `<span class="material-symbols-rounded">search</span>`
+- Common icons: `search`, `movie`, `close`, `trophy`, `arrow_forward`, `chevron_right`
+
+### MediaCard Design
+
+From homepage card grid (8 cards, gap 16px):
+- Layout: `vertical`, `gap: 10`, `width: fill_container`
+- Poster: `aspect-[2/3]`, `w-full`, `object-cover`, `rounded-lg`
+- Score badge: positioned over poster bottom-right
+  - Green `#22c55e` for ≥ 8.0, Yellow `#eab308` for ≥ 6.0, Red `#ef4444` for < 6.0, Grey `#6B6B70` for null
+- Title: `fontSize: 13`, `fontWeight: 500`, `color: #FFFFFF`, single line truncate
+
+### Pagination Design
+
+From movie list page:
+- Button size: `36×36px`, `cornerRadius: 8`
+- Active page: `fill: #FF8400`, white text
+- Inactive: border `1px solid #2A2A2E`, text `#FFFFFF`
+- Prev/Next: same border style, chevron icon
+- Gap between buttons: `8px`
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T060 – Vite + Vue 3 Project Init

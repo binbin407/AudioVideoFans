@@ -59,6 +59,68 @@ spec-kitty implement WP25 --base WP23
 - Banner order: drag-and-drop same pattern as franchise movie order (WP24)
 - After approve/reject: refresh list and update dashboard stats count
 
+## Design Reference
+
+**Source**: `design/design.pen` — frames `Ja0gp` (Content Review), `8SbRd` (Data Import)
+
+### Pending Content Review List (frame `Ja0gp`)
+
+**Status Tabs** (top of page):
+- Tab bar: `border-bottom: 1px solid #2A2A2E`
+- Active: `color: #FFFFFF`, `border-bottom: 2px solid #FF8400`
+- Tabs: 待审核(N) / 已通过 / 已拒绝
+
+**Toolbar**:
+- Left: content type filter (全部/电影/电视剧/动漫) + source filter (TMDB/豆瓣/时光网)
+- Right: "批量通过" button (disabled when no selection), `fill: #22c55e20`, `color: #22c55e`, `border: 1px solid #22c55e`
+
+**Table** (same style as WP23):
+- Checkbox column (for bulk select)
+- Columns: 封面(60px) / 标题 / 类型 / 来源 / 采集时间 / 状态 / 操作
+- "审核" action: `color: #FF8400`
+- "忽略" action: `color: #6B6B70`
+
+### Single Item Review Page
+
+**Split layout** (two columns):
+- Left (content preview, `width: fill_container`):
+  - Pre-filled form showing scraped data (read-only view)
+  - Poster preview: `160×240px`, `cornerRadius: 8`
+  - All fields displayed as read-only with `fill: #111114` background
+- Right (review panel, `width: 320px`):
+  - `fill: #16161A`, `border-left: 1px solid #2A2A2E`, `padding: 24`
+  - "通过并发布" button: `fill: #22c55e`, `color: #FFFFFF`, `width: fill_container`
+  - "通过为草稿" button: `fill: #16161A`, `border: 1px solid #2A2A2E`, `color: #FFFFFF`
+  - "拒绝" button: `fill: #ef444420`, `color: #ef4444`, `border: 1px solid #ef4444`
+  - Reject reason textarea (shown when reject clicked): `fill: #111114`, `border: 1px solid #2A2A2E`
+  - "上一条" / "下一条" navigation: `color: #B8B9B6`, `fontSize: 13`
+
+### Data Import / Sync Page (frame `8SbRd`)
+
+**Source Cards** (2 columns, `gap: 16px`):
+Each source card: `cornerRadius: 12`, `fill: #16161A`, `border: 1px solid #2A2A2E`, `padding: 24`
+- Source logo/name: `fontSize: 16, fontWeight: 600`
+- Last sync time: `fontSize: 13, color: #6B6B70`
+- "立即同步" button: `fill: #FF8400`, `color: #FFFFFF`, `cornerRadius: 8`
+- Status indicator: syncing spinner / success `#22c55e` / error `#ef4444`
+
+**Sync History Table**:
+- Columns: 来源 / 开始时间 / 耗时 / 新增 / 更新 / 失败 / 状态
+- Status badge: same style as content status badges
+
+### Banner Management
+
+No dedicated design frame — follows same admin table + form pattern:
+
+**Banner List Table**:
+- Columns: 预览图(120×45px) / 标题 / 链接 / 排序 / 状态 / 操作
+- Drag handle column for reordering
+- Active toggle: TDesign `t-switch`, active `fill: #FF8400`
+
+**Banner Edit Form**:
+- 标题 / 副标题 / 链接URL / 图片上传(COS) / 排序权重 / 状态(草稿/激活)
+- Image preview: `width: fill_container`, `aspect-ratio: 16/6`, `cornerRadius: 8`, `object-cover`
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T107 – Pending Content Review List

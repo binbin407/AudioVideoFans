@@ -63,6 +63,84 @@ spec-kitty implement WP18 --base WP15
 - Release dates: show all regions (e.g., "中国大陆: 2024-03-15 / 北美: 2024-03-01")
 - `<title>`: `{titleCn}({year}) - 影视网`
 
+## Design Reference
+
+**Source**: `design/design.pen` — frame `cNAF4` (Movie Detail - 电影详情页), width 1440px
+
+### Detail Hero (frame `xlTB6`)
+
+```
+height: 480px
+layout: none (absolute positioning)
+clip: true
+width: fill_container
+```
+
+Layers (bottom to top):
+1. **Backdrop** (`YvoO2`): `1440×480px`, `object-cover`
+2. **Bottom gradient** (`Blcn1`): `linear-gradient(0deg, #0B0B0EFF 65%, #0B0B0E00 100%)`
+3. **Left gradient** (`vKYgq`): `linear-gradient(90deg, #0B0B0EBB 0%, #0B0B0E00 50%)`
+4. **Blur overlay** (`Qx85d`): `#0B0B0E66` (semi-transparent dark)
+5. **Movie Info** (`ZztYP`): positioned at `x:60, y:100`, `width: 1320px`, `alignItems: end`, `gap: 40px`
+   - **Poster** (`0VCaJ`): `240×340px`, `cornerRadius: 12`, `box-shadow: 0 8px 20px #00000066`
+   - **Info Column** (`8yZxp`): `width: fill_container`, `layout: vertical`, `gap: 16px`
+
+### Info Column Contents
+
+- Genre tag chip: `cornerRadius: 4`, `padding: [3, 8]`, `fontSize: 12`, `color: #FF8400`, `border: 1px solid #FF8400`
+- Title (CN): `fontSize: 36, fontWeight: 700, color: #FFFFFF`
+- Original title: `fontSize: 16, color: #B8B9B6`
+- Meta row: year + rating + duration + region, `gap: 16px`, `fontSize: 14, color: #B8B9B6`
+- Score badges row: Douban score `color: #22c55e` (large), IMDB score
+- Action buttons: "加入片单" + "分享" buttons
+
+### Main Content (frame `H7xsg`)
+
+```
+padding: [32, 60, 40, 60]
+layout: vertical
+gap: 40
+```
+
+### Rating Cards (frame `7I1xr`, gap 32)
+
+- **Douban** (`XBxxb`): `cornerRadius: 12`, `fill: #16161A`, `border: 1px solid #2A2A2E`, `padding: 24`, `layout: vertical`, `gap: 16`
+- **IMDB** (`QT1ay`): `width: 200px`, `cornerRadius: 12`, `fill: #16161A`, `padding: 24`, `alignItems: center`, `justifyContent: center`
+- **Mtime** (`57z14`): same as Douban
+
+### Synopsis Section (frame `aeD5N`)
+
+```
+layout: vertical
+gap: 16
+```
+- Title: `fontSize: 20, fontWeight: 700, color: #FFFFFF`
+- Text: `fontSize: 14, color: #B8B9B6, lineHeight: 1.8, width: fill_container`
+- "展开全文 ▼": `fontSize: 13, fontWeight: 500, color: #FF8400`
+
+### Cast Section (frame `rAf6w`)
+
+- Section header: title `fontSize: 20, fontWeight: 700` + "查看全部" link, `justify-content: space-between`
+- Cast grid (`UH8nm`): `gap: 16px`; each card: avatar (80×110px) + name + character
+
+### Image Gallery (frame `xQjSD`)
+
+- Grid (`sGqYA`): `gap: 12px`; thumbnails `cornerRadius: 8`
+- "查看全部图片 →": `fontSize: 13, fontWeight: 500, color: #FF8400`
+
+### Franchise Section (frame `iKkg1`)
+
+- Card (`IUJOU`): `cornerRadius: 12`, `fill: #16161A`, `border: 1px solid #2A2A2E`, `padding: 20`, `layout: vertical`, `gap: 16`
+
+### Awards Section (frame `Rsz6D`)
+
+- List (`Eohdr`): `cornerRadius: 12`, `fill: #16161A`, `border: 1px solid #2A2A2E`, `clip: true`
+- Each row: `padding: [16, 20]`, `border-bottom: 1px solid #2A2A2E`
+
+### Similar Content Section (frame `CaNAK`)
+
+- Grid (`oQFwG`): `gap: 16px`, same 6-column grid as list page
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T079 – Movie Detail API + Page Shell

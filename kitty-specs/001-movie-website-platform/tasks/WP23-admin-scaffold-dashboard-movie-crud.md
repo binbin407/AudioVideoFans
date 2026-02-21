@@ -60,6 +60,106 @@ spec-kitty implement WP23 --base WP14
 - JWT stored in `localStorage`; 401 response → redirect to `/admin/login`
 - Admin routes all prefixed `/admin/`; public frontend routes unaffected
 
+## Design Reference
+
+**Source**: `design/design.pen` — frames `vkhWP` (Admin Dashboard), `cIdBD` (Movie List), `eUXet` (Edit Form)
+
+### Admin Layout
+
+**Sidebar** (frame `sidebar` in `vkhWP`):
+```
+width: 260px
+fill: #111114
+border-right: 1px solid #2A2A2E
+padding: [24, 16]
+layout: vertical
+gap: 8
+```
+- Logo row: `#FF8400` movie icon (20px) + "影视网管理" text `fontSize: 16, fontWeight: 700, color: #FFFFFF`, `gap: 8px`, `padding: [0, 8]`, `margin-bottom: 24px`
+- Nav item: `padding: [10, 12]`, `cornerRadius: 8`, `gap: 12px`, `fontSize: 14`
+  - Default: `color: #B8B9B6`, `fill: transparent`
+  - Active: `color: #FF8400`, `fill: #FF840015`
+  - Hover: `fill: #1E1E22`
+- Nav icons: Material Symbols Rounded, 20px
+- Section divider: `fill: #2A2A2E`, `height: 1px`, `margin: 8px 0`
+
+**Main Content Area**:
+```
+fill: #0B0B0E
+layout: vertical
+padding: [24, 32]
+gap: 24
+```
+
+**Page Header**:
+- Title: `fontSize: 22, fontWeight: 700, color: #FFFFFF`
+- Subtitle/breadcrumb: `fontSize: 13, color: #6B6B70`
+
+### Dashboard Stats Cards (frame `statsRow` in `vkhWP`)
+
+4 cards in a row, `gap: 16px`:
+```
+cornerRadius: 12
+fill: #16161A
+border: 1px solid #2A2A2E
+padding: 20
+layout: vertical
+gap: 8
+```
+- Label: `fontSize: 13, color: #6B6B70`
+- Value: `fontSize: 28, fontWeight: 700, color: #FFFFFF`
+- Change indicator: `fontSize: 12` — positive `color: #22c55e`, negative `color: #ef4444`
+- Icon: Material Symbols Rounded, 24px, `color: #FF8400`, top-right corner
+
+### Movie List Page (frame `cIdBD`)
+
+**Toolbar** (above table):
+```
+justify-content: space-between
+gap: 16px
+```
+- Left: search input (`width: 280px`, `cornerRadius: 8`, `fill: #16161A`, `border: 1px solid #2A2A2E`) + status filter dropdown + type filter dropdown
+- Right: "新增电影" button (`fill: #FF8400`, `color: #FFFFFF`, `cornerRadius: 8`, `padding: [8, 16]`)
+
+**Table** (TDesign `t-table`):
+```
+cornerRadius: 12
+fill: #16161A
+border: 1px solid #2A2A2E
+```
+- Header row: `fill: #111114`, `color: #6B6B70`, `fontSize: 13`
+- Data row: `fill: #16161A`, `color: #FFFFFF`, `fontSize: 14`
+- Row hover: `fill: #1E1E22`
+- Row border: `border-bottom: 1px solid #2A2A2E`
+- Columns: 海报(60px) / 标题 / 年份 / 评分 / 状态 / 操作
+- Status badge: `cornerRadius: 4`, `padding: [2, 8]`, `fontSize: 12`
+  - published: `fill: #22c55e20`, `color: #22c55e`
+  - draft: `fill: #6B6B7020`, `color: #6B6B70`
+  - deleted: `fill: #ef444420`, `color: #ef4444`
+- Action buttons: "编辑" `color: #FF8400` + "删除" `color: #ef4444`, `fontSize: 13`
+
+### Movie Edit Form (frame `eUXet`)
+
+**Form Layout**: single column, `gap: 24px`, `max-width: 800px`
+
+Form sections (TDesign `t-card` with title):
+1. **基本信息**: 中文名 / 原名 / 年份 / 时长 / 地区 / 语言
+2. **分类信息**: 类型(多选) / 关键词(tag input)
+3. **剧情简介**: textarea, `min-height: 120px`
+4. **媒体资源**: 海报上传 + 背景图上传 (COS upload)
+5. **演职人员**: 动态列表 — 搜索人物 + 选择角色类型 + 角色名
+
+Form field style (TDesign overrides):
+- Input/Select: `fill: #16161A`, `border: 1px solid #2A2A2E`, `color: #FFFFFF`
+- Label: `fontSize: 14, color: #B8B9B6`
+- Required mark: `color: #FF8400`
+- Error state: `border-color: #ef4444`
+
+**Form Actions** (sticky bottom bar):
+- "保存草稿" button: `fill: #16161A`, `border: 1px solid #2A2A2E`, `color: #FFFFFF`
+- "发布" button: `fill: #FF8400`, `color: #FFFFFF`
+- Gap: `16px`
+
 ## Subtasks & Detailed Guidance
 
 ### Subtask T099 – Admin App Scaffold + Auth
