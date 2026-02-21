@@ -3,9 +3,9 @@
 **Inputs**: Design documents from `kitty-specs/001-movie-website-platform/`
 **Prerequisites**: plan.md ✓, spec.md ✓, data-model.md ✓, contracts/ ✓, quickstart.md ✓
 
-**Tests**: No explicit test WPs included (not requested). Tests are embedded as validation steps within each WP where critical.
+**Tests**: WP27 (backend xUnit, ≥80% coverage) and WP28 (frontend Vitest, key components) added per constitution requirement. Subtasks T116–T125 cover test setup, domain unit tests, application service tests, repository integration tests, and component tests.
 
-**Organization**: 115 fine-grained subtasks (T001–T115) grouped into 26 work packages (WP01–WP26). Each work package is independently deliverable in one focused session.
+**Organization**: 125 fine-grained subtasks (T001–T125) grouped into 28 work packages (WP01–WP28). Each work package is independently deliverable in one focused session.
 
 ---
 
@@ -741,6 +741,9 @@ WP23 (Admin Scaffold + Dashboard) [no backend dependency]
   └── WP25 (Crawler Review + Banner Admin)
 
 WP26 (Observability) [depends on WP02 + WP14]
+
+WP27 (Backend xUnit Tests) [depends on WP02-WP11]
+WP28 (Frontend Vitest Tests) [depends on WP14-WP18]
 ```
 
 **Parallelization Highlights**:
@@ -750,6 +753,58 @@ WP26 (Observability) [depends on WP02 + WP14]
 - WP16–WP22 can all be built in parallel after WP15 is done
 
 **MVP Scope (Phase 1)**: WP01 → WP02 → WP03 → WP04 → WP05 → WP14 → WP15 → WP16 → WP17 → WP18
+
+---
+
+## Phase 8: Testing
+
+---
+
+## Work Package WP27: Backend xUnit Tests (Priority: P2)
+
+**Goal**: xUnit test suite for Domain entities, Application services, and API controllers. Coverage gate ≥ 80%; core business paths (auth, approve/reject, soft-delete) at 100%.
+**Independent Test**: `dotnet test api/tests/ --collect:"XPlat Code Coverage"` passes with coverage ≥ 80% and zero test failures.
+**Prompt**: `tasks/WP27-backend-xunit-tests.md`
+**Estimated Size**: ~380 lines
+
+### Included Subtasks
+- [ ] T116 xUnit project setup (Unit + Integration projects, Testcontainers PostgreSQL + Redis, `WebApplicationFactory`, coverage config)
+- [ ] T117 Domain entity unit tests (Movie/TvSeries/Anime soft-delete, PendingContent approve/reject/reset, FeaturedBanner active-time logic)
+- [ ] T118 Application service unit tests (MovieApplicationService cache hit/miss, PendingContentService bulk-approve, SearchService zhparser fallback)
+- [ ] T119 Repository integration tests (genre array `&&` filter, soft-delete visibility, Redis DeletePattern)
+- [ ] T120 API controller integration tests (401 guard on all admin routes, soft-delete round-trip, search empty query)
+
+### Implementation Notes
+- Use Testcontainers (`Testcontainers.PostgreSql`, `Testcontainers.Redis`) — no InMemoryDatabase
+- `TestJwtFactory.cs` generates throwaway RS256 JWT for auth tests
+- CI gate: `dotnet test /p:Threshold=80 /p:ThresholdType=line`
+
+### Dependencies
+- Depends on WP02, WP03, WP04, WP05, WP10, WP11 (all business logic must be implemented first)
+
+---
+
+## Work Package WP28: Frontend Vitest Component Tests (Priority: P2)
+
+**Goal**: Vitest component test suite for all constitution-mandated key components (MediaCard, FilterBar, Pagination) plus BannerCarousel and SearchBar.
+**Independent Test**: `npm run test` in `/frontend` passes with zero failures; `npm run test:coverage` shows component coverage.
+**Prompt**: `tasks/WP28-frontend-vitest-component-tests.md`
+**Estimated Size**: ~360 lines
+
+### Included Subtasks
+- [ ] T121 Vitest + @vue/test-utils setup (jsdom env, global router stub, coverage v8, npm scripts)
+- [ ] T122 MediaCard + ImageTabBlock tests (null score hidden, image error placeholder, tab visibility)
+- [ ] T123 FilterBar + Pagination tests (tag highlight, emit payload, ellipsis, disabled prev/next)
+- [ ] T124 SearchBar autocomplete tests (300ms debounce with fake timers, dropdown, Enter navigation)
+- [ ] T125 BannerCarousel + SynopsisBlock tests (empty = no render, 5s interval, clearInterval on unmount, collapse at 150 chars)
+
+### Implementation Notes
+- Add `data-testid` attributes to components where needed (expected)
+- Use `vi.useFakeTimers()` + `afterEach(() => vi.useRealTimers())` for all timer tests
+- Mock COS base URL in `tests/setup.ts`: `import.meta.env.VITE_COS_CDN_BASE = 'https://test-cdn.example.com'`
+
+### Dependencies
+- Depends on WP14 (components must exist), WP15 (SearchBar), WP16 (BannerCarousel), WP18 (SynopsisBlock)
 
 ---
 
@@ -872,7 +927,17 @@ WP26 (Observability) [depends on WP02 + WP14]
 | T113 | Nginx configuration | WP26 | P2 | No |
 | T114 | Docker Compose local dev setup | WP26 | P2 | No |
 | T115 | CI/CD pipeline stubs | WP26 | P2 | No |
+| T116 | xUnit project setup + Testcontainers + coverage config | WP27 | P2 | No |
+| T117 | Domain entity unit tests (soft-delete, approve/reject, banner active) | WP27 | P2 | Yes |
+| T118 | Application service unit tests (cache hit/miss, bulk-approve, search fallback) | WP27 | P2 | Yes |
+| T119 | Repository integration tests (array filter, soft-delete visibility, Redis) | WP27 | P2 | Yes |
+| T120 | API controller integration tests (401 guard, soft-delete round-trip) | WP27 | P2 | No |
+| T121 | Vitest + @vue/test-utils setup (jsdom, router stub, coverage v8) | WP28 | P2 | No |
+| T122 | MediaCard + ImageTabBlock tests | WP28 | P2 | Yes |
+| T123 | FilterBar + Pagination tests | WP28 | P2 | Yes |
+| T124 | SearchBar autocomplete tests (debounce, dropdown, keyboard) | WP28 | P2 | No |
+| T125 | BannerCarousel + SynopsisBlock tests (timer, empty state, collapse) | WP28 | P2 | No |
 
 ---
 
-> This tasks.md was generated by `/spec-kitty.tasks`. Each WP prompt file contains detailed implementation guidance. 26 work packages, 115 subtasks total.
+> This tasks.md was generated by `/spec-kitty.tasks` and updated by `/spec-kitty.analyze` remediation. 28 work packages, 125 subtasks total.
