@@ -58,7 +58,7 @@ spec-kitty implement WP14 --base WP03
 ## Context & Constraints
 
 - **Spec**: FR-1 (media card), FR-2 (score display), FR-6 (lazy image loading)
-- Stack: Vue 3 Composition API + `<script setup>`, Vite 5, Tailwind CSS v3, TypeScript, Pinia, Vue Router 4
+- Stack: Vue 3 Composition API + `<script setup>`, Vite 5, Tailwind CSS v4, TypeScript, Pinia, Vue Router 4
 - COS image URLs: `https://{bucket}.cos.{region}.myqcloud.com/{cos_key}` — build helper `cosUrl(key)` in utils
 - No UI component library for public frontend (custom Tailwind components only)
 - API base URL from `VITE_API_BASE_URL` env variable

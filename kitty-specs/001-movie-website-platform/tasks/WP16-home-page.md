@@ -47,7 +47,7 @@ spec-kitty implement WP16 --base WP15
 
 ## Objectives & Success Criteria
 
-- Hero banner carousel auto-plays featured banners (3-5s interval); manual prev/next controls
+- Hero banner carousel auto-plays featured banners (5s interval); manual prev/next controls
 - "最新上映" section shows 10 recent movies as horizontal scroll row of MediaCards
 - "热门剧集" and "热门动漫" sections each show 6 cards
 - "本周热榜" section shows top-10 hot movies with rank numbers (gold/silver/bronze for 1-3)
@@ -186,7 +186,7 @@ Gradient fills:
 **Steps**:
 1. `src/components/BannerCarousel.vue`:
    - Props: `banners: Banner[]`
-   - Auto-advance every 4 seconds using `setInterval`; clear on `onUnmounted`
+   - Auto-advance every 5 seconds using `setInterval`; clear on `onUnmounted`
    - Pause on `@mouseenter`; resume on `@mouseleave`
    - Prev/next arrow buttons (absolute positioned left/right)
    - Dot indicators at bottom (click to jump to slide)
@@ -199,7 +199,7 @@ Gradient fills:
 - `frontend/src/components/BannerCarousel.vue`
 
 **Validation**:
-- [ ] Auto-advances every 4 seconds
+- [ ] Auto-advances every 5 seconds
 - [ ] Pauses on hover; resumes on leave
 - [ ] Dot indicators reflect current slide
 - [ ] Manual prev/next works

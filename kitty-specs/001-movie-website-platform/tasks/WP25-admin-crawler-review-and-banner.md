@@ -53,7 +53,7 @@ spec-kitty implement WP25 --base WP23
 
 ## Context & Constraints
 
-- **Spec**: FR-28 (review queue), FR-29 (approve/reject), FR-30 (bulk approve), FR-31 (banner management)
+- **Spec**: FR-28 (review queue), FR-29 (approve/reject), FR-30 (bulk approve), FR-31 (banner management), FR-49 (banner configuration)
 - Pending list: default filter `status=pending`; tabs for pending/approved/rejected
 - Bulk approve: checkbox selection + "批量通过" button; max 50 items
 - Banner order: drag-and-drop same pattern as franchise movie order (WP24)
