@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: Monorepo Setup & Database Schema
-lane: "doing"
+lane: "planned"
 dependencies: []
 base_branch: master
 base_commit: 5af857fdf54659905def32e53cc98804677805e0
@@ -17,8 +17,8 @@ phase: Phase 0 - Infrastructure Foundation
 assignee: ''
 agent: "claude"
 shell_pid: "6792"
-review_status: ''
-reviewed_by: ''
+review_status: "has_feedback"
+reviewed_by: "binbin407"
 history:
 - timestamp: '2026-02-21T00:00:00Z'
   lane: planned
@@ -40,9 +40,44 @@ history:
 
 ## Review Feedback
 
-*[Empty – no feedback yet.]*
+**Reviewed by**: binbin407
+**Status**: ❌ Changes Requested
+**Date**: 2026-02-23
+
+**Issue 1 (Critical): `000_extensions.sql` contains a likely invalid PostgreSQL function reference and may fail on fresh PostgreSQL 15**
+
+- File: `api/migrations/000_extensions.sql`
+- Current SQL uses `pg_ts_token_type(...)` in the mapping existence check.
+- PostgreSQL text-search token inspection is exposed via `ts_token_type(...)` (not `pg_ts_token_type`), so the migration can fail before table migrations run.
+
+**How to fix:**
+- Replace the custom token-map introspection block with a simpler, Postgres-15-safe pattern:
+  1) create extensions,
+  2) create `chinese_zh` config if not exists,
+  3) add mapping directly once (or guard with a robust catalog query that does not depend on undefined functions).
+- Re-validate by applying `000_extensions.sql` on a clean PostgreSQL 15 instance.
 
 ---
+
+**Issue 2 (High): review diff currently includes non-deliverable task metadata drift against `master`**
+
+- File shown in review diff: `kitty-specs/001-movie-website-platform/tasks/WP01-monorepo-setup-and-db-schema.md`
+- During review, `master..HEAD` includes task-frontmatter/history differences that are not implementation deliverables.
+
+**How to fix:**
+- Rebase/sync the WP worktree on latest `master` before final review and ensure deliverable diff is limited to WP01 implementation files.
+- Re-run review commands:
+  - `git log master..HEAD --oneline`
+  - `git diff master..HEAD --stat`
+
+---
+
+**Dependency/coordination note (required):**
+- Dependents detected: `WP02`, `WP13` (both currently in `planned` lane).
+- If this WP is updated and re-reviewed, dependent agents should rebase before continuing:
+  - `cd .worktrees/001-movie-website-platform-WP02 && git rebase 001-movie-website-platform-WP01`
+  - `cd .worktrees/001-movie-website-platform-WP13 && git rebase 001-movie-website-platform-WP01`
+
 
 ## Implementation Command
 
@@ -275,3 +310,4 @@ spec-kitty implement WP01
 - 2026-02-23T01:14:37Z – claude – shell_pid=25052 – lane=doing – Assigned agent via workflow command
 - 2026-02-23T01:41:22Z – claude – shell_pid=25052 – lane=for_review – Ready for review: monorepo skeleton, PostgreSQL migrations (000-004), zhparser setup docs
 - 2026-02-23T01:45:40Z – claude – shell_pid=6792 – lane=doing – Started review via workflow command
+- 2026-02-23T01:49:12Z – claude – shell_pid=6792 – lane=planned – Moved to planned
