@@ -3,6 +3,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using MovieSite.API.Middleware;
 using MovieSite.Application.Common;
+using MovieSite.Application.Home;
+using MovieSite.Application.Movies;
 using MovieSite.Domain;
 using MovieSite.Domain.Repositories;
 using MovieSite.Infrastructure;
@@ -105,6 +107,9 @@ builder.Services.AddScoped<IAnimeRepository, AnimeRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRedisCache, RedisCache>();
+builder.Services.AddScoped<HomeApplicationService>();
+builder.Services.AddScoped<MovieApplicationService>();
+builder.Services.AddScoped<CacheInvalidationService>();
 builder.Services.AddSingleton<ITencentCosClient>(_ =>
     new TencentCosClient(builder.Configuration["COS:CdnBase"] ?? string.Empty));
 

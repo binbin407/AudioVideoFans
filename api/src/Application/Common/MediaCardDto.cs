@@ -1,11 +1,12 @@
+using System.Text.Json.Serialization;
+
 namespace MovieSite.Application.Common;
 
 public sealed record MediaCardDto(
-    long Id,
-    string ContentType,
-    string TitleCn,
-    int? Year,
-    string? PosterCosKey,
-    decimal? DoubanScore,
-    string[] Genres
+    [property: JsonPropertyName("id")] long Id,
+    [property: JsonPropertyName("title_cn")] string TitleCn,
+    [property: JsonPropertyName("year")] int? Year,
+    [property: JsonPropertyName("poster_cos_key")] string? PosterCosKey,
+    [property: JsonPropertyName("douban_score")] decimal? DoubanScore,
+    [property: JsonPropertyName("genres")] string[] Genres
 );
