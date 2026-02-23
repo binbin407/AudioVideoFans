@@ -181,10 +181,10 @@
 **预估规模**: 约 300 行
 
 ### 包含子任务
-- [ ] T025 `GET /api/v1/tv`：TvSeriesListQuery——与电影相同的过滤维度，另加 `air_status` 多值过滤器（airing/ended/production/cancelled）；支持按 `first_air_date DESC` 排序；Redis 缓存 `tv:list:{hash}` 10 分钟
-- [ ] T026 `GET /api/v1/tv/:id`：TvSeriesDetailDto——基础信息 + `air_status` 标签 + `next_episode_info`（仅在播出中且非 null 时）+ 季摘要（每季：海报、名称、集数、首播日期、平均评分、简介）；Redis 缓存 `tv:detail:{id}` 1 小时
-- [ ] T027 `GET /api/v1/tv/:id/seasons/:season_number`：SeasonDetailDto——季头字段 + 按 episode_number ASC 排序的完整集列表（每集：id、episode_number、名称、播出日期、时长、still_cos_key、简介）；包含上一季/下一季编号
-- [ ] T028 `GET /api/v1/tv/:id/similar`：复用 SimilarContentService（content_type='tv_series'）
+- [x] T025 `GET /api/v1/tv`：TvSeriesListQuery——与电影相同的过滤维度，另加 `air_status` 多值过滤器（airing/ended/production/cancelled）；支持按 `first_air_date DESC` 排序；Redis 缓存 `tv:list:{hash}` 10 分钟
+- [x] T026 `GET /api/v1/tv/:id`：TvSeriesDetailDto——基础信息 + `air_status` 标签 + `next_episode_info`（仅在播出中且非 null 时）+ 季摘要（每季：海报、名称、集数、首播日期、平均评分、简介）；Redis 缓存 `tv:detail:{id}` 1 小时
+- [x] T027 `GET /api/v1/tv/:id/seasons/:season_number`：SeasonDetailDto——季头字段 + 按 episode_number ASC 排序的完整集列表（每集：id、episode_number、名称、播出日期、时长、still_cos_key、简介）；包含上一季/下一季编号
+- [x] T028 `GET /api/v1/tv/:id/similar`：复用 SimilarContentService（content_type='tv_series'）
 - [ ] T131 `GET /api/v1/tv/:id/credits`：返回按部门分组的完整演职员列表（导演/编剧/主演/制片人/其他），支持分页
 
 ### 实施说明
