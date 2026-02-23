@@ -1,10 +1,13 @@
 ---
 work_package_id: WP06
 title: TV Series API
-lane: planned
+lane: "doing"
 dependencies:
 - WP02
 - WP03
+base_branch: 001-movie-website-platform-WP06-merge-base
+base_commit: c010a56dcf7f127f65793292406e29ff4290a5f8
+created_at: '2026-02-23T13:56:22.064553+00:00'
 subtasks:
 - T025
 - T026
@@ -13,7 +16,7 @@ subtasks:
 phase: Phase 2 - Extended Backend API
 assignee: ''
 agent: ''
-shell_pid: ''
+shell_pid: "33576"
 review_status: ''
 reviewed_by: ''
 history:
