@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: Monorepo Setup & Database Schema
-lane: "planned"
+lane: "for_review"
 dependencies: []
 base_branch: master
 base_commit: 5af857fdf54659905def32e53cc98804677805e0
@@ -311,3 +311,4 @@ spec-kitty implement WP01
 - 2026-02-23T01:41:22Z – claude – shell_pid=25052 – lane=for_review – Ready for review: monorepo skeleton, PostgreSQL migrations (000-004), zhparser setup docs
 - 2026-02-23T01:45:40Z – claude – shell_pid=6792 – lane=doing – Started review via workflow command
 - 2026-02-23T01:49:12Z – claude – shell_pid=6792 – lane=planned – Moved to planned
+- 2026-02-23T01:53:50Z – claude – shell_pid=6792 – lane=for_review – Ready for review: fixed PG15-safe zhparser extension migration and rebased onto latest master
