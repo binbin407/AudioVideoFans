@@ -1,0 +1,36 @@
+# Agent directories - NEVER commit these (may contain auth tokens and credentials)
+.claude/
+.codex/
+.gemini/
+.cursor/
+.qwen/
+.opencode/
+.windsurf/
+.kilocode/
+.augment/
+.roo/
+.amazonq/
+.github/copilot/
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
