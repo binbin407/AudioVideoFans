@@ -1,7 +1,7 @@
 ---
 work_package_id: WP06
 title: TV Series API
-lane: "doing"
+lane: "for_review"
 dependencies:
 - WP02
 - WP03
@@ -231,3 +231,4 @@ air_status = ANY(@statuses::varchar[])
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
 - 2026-02-23T13:56:24Z – gpt-5.3-codex – shell_pid=33576 – lane=doing – Assigned agent via workflow command
+- 2026-02-23T14:33:02Z – gpt-5.3-codex – shell_pid=33576 – lane=for_review – Ready for review: completed T025/T026/T027/T028/T131, API builds successfully.
