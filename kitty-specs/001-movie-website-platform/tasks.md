@@ -55,7 +55,7 @@
 **预估规模**: 约 360 行
 
 ### 包含子任务
-- [ ] T007 创建 .NET 解决方案结构：Domain / Application / Infrastructure / API 项目及项目引用关系
+- [x] T007 创建 .NET 解决方案结构：Domain / Application / Infrastructure / API 项目及项目引用关系
 - [ ] T008 定义所有带 SqlSugar 特性的领域实体：Movie、TvSeries、Anime、TvSeason、TvEpisode、AnimeSeason、AnimeEpisode、Person、Credit、Franchise、Keyword、ContentKeyword、MediaVideo、AwardEvent、AwardCeremony、AwardNomination、FeaturedBanner、PendingContent
 - [ ] T009 在 Domain 中定义 IRepository\<T\> 泛型接口及专用接口（IMovieRepository、ITvSeriesRepository 等）；在 Infrastructure 中实现 SqlSugarRepository\<T\> 基类
 - [ ] T010 配置 SqlSugar DI（Scoped ISqlSugarClient，PgSqlIsAutoToLower = false），实现 IUnitOfWork + UnitOfWork
