@@ -1,27 +1,30 @@
 ---
-work_package_id: "WP01"
-subtasks:
-  - "T001"
-  - "T002"
-  - "T003"
-  - "T004"
-  - "T005"
-  - "T006"
-title: "Monorepo Setup & Database Schema"
-phase: "Phase 0 - Infrastructure Foundation"
-lane: "planned"
-assignee: ""
-agent: ""
-shell_pid: ""
-review_status: ""
-reviewed_by: ""
+work_package_id: WP01
+title: Monorepo Setup & Database Schema
+lane: "doing"
 dependencies: []
+base_branch: master
+base_commit: 5af857fdf54659905def32e53cc98804677805e0
+created_at: '2026-02-23T01:14:34.318698+00:00'
+subtasks:
+- T001
+- T002
+- T003
+- T004
+- T005
+- T006
+phase: Phase 0 - Infrastructure Foundation
+assignee: ''
+agent: ''
+shell_pid: "25052"
+review_status: ''
+reviewed_by: ''
 history:
-  - timestamp: "2026-02-21T00:00:00Z"
-    lane: "planned"
-    agent: "system"
-    shell_pid: ""
-    action: "Prompt generated via /spec-kitty.tasks"
+- timestamp: '2026-02-21T00:00:00Z'
+  lane: planned
+  agent: system
+  shell_pid: ''
+  action: Prompt generated via /spec-kitty.tasks
 ---
 
 # Work Package Prompt: WP01 – Monorepo Setup & Database Schema
