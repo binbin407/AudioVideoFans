@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: Monorepo Setup & Database Schema
-lane: "doing"
+lane: "planned"
 dependencies: []
 base_branch: master
 base_commit: 5af857fdf54659905def32e53cc98804677805e0
@@ -65,9 +65,21 @@ history:
 
 ---
 
+**Issue 3（High，仍需修复）**
+
+- 文件：`kitty-specs/001-movie-website-platform/tasks/WP02-dotnet-ddd-scaffold.md`
+- 现象：本次 `master..HEAD` 差异中把 `WP02` 的状态从 `done/approved` 回退为 `planned`（含 `lane/agent/shell_pid/review_status/reviewed_by` 和 activity log 回退），属于跨 WP 状态污染，不应出现在 WP01 交付分支中。
+
+**How to fix**
+
+1. 将 `WP02-dotnet-ddd-scaffold.md` 恢复为与当前 `master` 一致。
+2. 确认 WP01 分支不包含任何其他 WP 的状态/元数据改动。
+
+---
+
 **Dependency/coordination note（required）**
 
-- Dependents: `WP02`, `WP13`（当前均非 done）。
+- Dependents: `WP02`, `WP13`。
 - 若 WP01 后续再次改动并重提审，请通知依赖方在继续前 rebase：
   - `cd .worktrees/001-movie-website-platform-WP02 && git rebase 001-movie-website-platform-WP01`
   - `cd .worktrees/001-movie-website-platform-WP13 && git rebase 001-movie-website-platform-WP01`
@@ -77,8 +89,8 @@ history:
 **Dependency checks（review）**
 
 - dependency_check：WP01 frontmatter `dependencies: []`，无前置阻塞。
-- dependent_check：存在依赖方 `WP02`、`WP13`，已在上方给出 rebase 警示命令。
-- verify_instruction：依赖声明与当前代码耦合一致（WP01 提供基础 schema/迁移与 monorepo 基线，WP02/WP13 依赖该基础继续开发）。
+- dependent_check：存在依赖方 `WP02`（当前 `lane: done`）、`WP13`（当前 `lane: planned`）。
+- verify_instruction：依赖声明与当前代码耦合一致（WP01 提供 monorepo 基线 + 数据库迁移基础；下游 WP 在此基础上继续实现）。
 
 
 ## Implementation Command
@@ -317,3 +329,4 @@ spec-kitty implement WP01
 - 2026-02-23T01:54:50Z – claude – shell_pid=17788 – lane=doing – Started review via workflow command
 - 2026-02-23T02:07:07Z – claude – shell_pid=17788 – lane=planned – Moved to planned
 - 2026-02-23T06:12:54Z – codex – shell_pid=32356 – lane=doing – Started review via workflow command
+- 2026-02-23T06:19:24Z – codex – shell_pid=32356 – lane=planned – Moved to planned
