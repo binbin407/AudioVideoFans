@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: Monorepo Setup & Database Schema
-lane: "doing"
+lane: "planned"
 dependencies: []
 base_branch: master
 base_commit: 5af857fdf54659905def32e53cc98804677805e0
@@ -44,39 +44,41 @@ history:
 **Status**: ❌ Changes Requested
 **Date**: 2026-02-23
 
-**Issue 1 (Critical): `000_extensions.sql` contains a likely invalid PostgreSQL function reference and may fail on fresh PostgreSQL 15**
+**Issue 1（已修复，已验证）**
 
-- File: `api/migrations/000_extensions.sql`
-- Current SQL uses `pg_ts_token_type(...)` in the mapping existence check.
-- PostgreSQL text-search token inspection is exposed via `ts_token_type(...)` (not `pg_ts_token_type`), so the migration can fail before table migrations run.
-
-**How to fix:**
-- Replace the custom token-map introspection block with a simpler, Postgres-15-safe pattern:
-  1) create extensions,
-  2) create `chinese_zh` config if not exists,
-  3) add mapping directly once (or guard with a robust catalog query that does not depend on undefined functions).
-- Re-validate by applying `000_extensions.sql` on a clean PostgreSQL 15 instance.
+- 文件：`api/migrations/000_extensions.sql`
+- 结论：此前关于 `pg_ts_token_type(...)` 的兼容性问题已修复，当前实现改为 PostgreSQL 15 可执行的安全写法（先确保配置存在，再执行 mapping）。
 
 ---
 
-**Issue 2 (High): review diff currently includes non-deliverable task metadata drift against `master`**
+**Issue 2（High，仍需修复）**
 
-- File shown in review diff: `kitty-specs/001-movie-website-platform/tasks/WP01-monorepo-setup-and-db-schema.md`
-- During review, `master..HEAD` includes task-frontmatter/history differences that are not implementation deliverables.
+- 文件：`kitty-specs/001-movie-website-platform/tasks/WP01-monorepo-setup-and-db-schema.md`
+- 现象：`master..HEAD` 评审差异仍包含任务元数据漂移（`lane/shell_pid/history` 等非交付实现内容），导致本次评审 diff 不仅包含 WP01 交付代码。
 
-**How to fix:**
-- Rebase/sync the WP worktree on latest `master` before final review and ensure deliverable diff is limited to WP01 implementation files.
-- Re-run review commands:
-  - `git log master..HEAD --oneline`
-  - `git diff master..HEAD --stat`
+**How to fix**
+
+1. 将 WP01 分支同步到最新 `master` 后，清理该任务文件在功能分支中的非交付改动，确保 `git diff master..HEAD --stat` 仅包含 WP01 实现文件（monorepo skeleton + `api/migrations/000-004.sql` + `api/README.md` 等）。
+2. 重新检查：
+   - `git log master..HEAD --oneline`
+   - `git diff master..HEAD --stat`
 
 ---
 
-**Dependency/coordination note (required):**
-- Dependents detected: `WP02`, `WP13` (both currently in `planned` lane).
-- If this WP is updated and re-reviewed, dependent agents should rebase before continuing:
+**Dependency/coordination note（required）**
+
+- Dependents: `WP02`, `WP13`（当前均非 done）。
+- 若 WP01 后续再次改动并重提审，请通知依赖方在继续前 rebase：
   - `cd .worktrees/001-movie-website-platform-WP02 && git rebase 001-movie-website-platform-WP01`
   - `cd .worktrees/001-movie-website-platform-WP13 && git rebase 001-movie-website-platform-WP01`
+
+---
+
+**Dependency checks（review）**
+
+- dependency_check：WP01 frontmatter `dependencies: []`，无前置阻塞。
+- dependent_check：存在依赖方 `WP02`、`WP13`，已在上方给出 rebase 警示命令。
+- verify_instruction：依赖声明与当前代码耦合一致（WP01 提供基础 schema/迁移与 monorepo 基线，WP02/WP13 依赖该基础继续开发）。
 
 
 ## Implementation Command
@@ -313,3 +315,4 @@ spec-kitty implement WP01
 - 2026-02-23T01:49:12Z – claude – shell_pid=6792 – lane=planned – Moved to planned
 - 2026-02-23T01:53:50Z – claude – shell_pid=6792 – lane=for_review – Ready for review: fixed PG15-safe zhparser extension migration and rebased onto latest master
 - 2026-02-23T01:54:50Z – claude – shell_pid=17788 – lane=doing – Started review via workflow command
+- 2026-02-23T02:07:07Z – claude – shell_pid=17788 – lane=planned – Moved to planned
