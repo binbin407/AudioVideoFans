@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: Monorepo Setup & Database Schema
-lane: "for_review"
+lane: "doing"
 dependencies: []
 base_branch: master
 base_commit: 5af857fdf54659905def32e53cc98804677805e0
@@ -16,7 +16,7 @@ subtasks:
 phase: Phase 0 - Infrastructure Foundation
 assignee: ''
 agent: "claude"
-shell_pid: "6792"
+shell_pid: "17788"
 review_status: "has_feedback"
 reviewed_by: "binbin407"
 history:
@@ -312,3 +312,4 @@ spec-kitty implement WP01
 - 2026-02-23T01:45:40Z – claude – shell_pid=6792 – lane=doing – Started review via workflow command
 - 2026-02-23T01:49:12Z – claude – shell_pid=6792 – lane=planned – Moved to planned
 - 2026-02-23T01:53:50Z – claude – shell_pid=6792 – lane=for_review – Ready for review: fixed PG15-safe zhparser extension migration and rebased onto latest master
+- 2026-02-23T01:54:50Z – claude – shell_pid=17788 – lane=doing – Started review via workflow command
