@@ -1,9 +1,12 @@
 ---
 work_package_id: WP04
 title: Home + Movie List API
-lane: planned
+lane: "doing"
 dependencies:
 - WP02
+base_branch: 001-movie-website-platform-WP02
+base_commit: 144f7daf3e641e8f67ce316aa5acc55d7d736961
+created_at: '2026-02-23T09:17:15.485480+00:00'
 subtasks:
 - T017
 - T018
@@ -12,7 +15,7 @@ subtasks:
 phase: Phase 1 - Core Backend API
 assignee: ''
 agent: ''
-shell_pid: ''
+shell_pid: "49352"
 review_status: ''
 reviewed_by: ''
 history:
