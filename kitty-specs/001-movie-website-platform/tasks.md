@@ -185,7 +185,7 @@
 - [x] T026 `GET /api/v1/tv/:id`：TvSeriesDetailDto——基础信息 + `air_status` 标签 + `next_episode_info`（仅在播出中且非 null 时）+ 季摘要（每季：海报、名称、集数、首播日期、平均评分、简介）；Redis 缓存 `tv:detail:{id}` 1 小时
 - [x] T027 `GET /api/v1/tv/:id/seasons/:season_number`：SeasonDetailDto——季头字段 + 按 episode_number ASC 排序的完整集列表（每集：id、episode_number、名称、播出日期、时长、still_cos_key、简介）；包含上一季/下一季编号
 - [x] T028 `GET /api/v1/tv/:id/similar`：复用 SimilarContentService（content_type='tv_series'）
-- [ ] T131 `GET /api/v1/tv/:id/credits`：返回按部门分组的完整演职员列表（导演/编剧/主演/制片人/其他），支持分页
+- [x] T131 `GET /api/v1/tv/:id/credits`：返回按部门分组的完整演职员列表（导演/编剧/主演/制片人/其他），支持分页
 
 ### 实施说明
 - `air_status` 过滤器支持多值（`?status=airing&status=ended`）；构建 `WHERE air_status = ANY(@statuses)` SQL
