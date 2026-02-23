@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: Monorepo Setup & Database Schema
-lane: "doing"
+lane: "done"
 dependencies: []
 base_branch: master
 base_commit: 5af857fdf54659905def32e53cc98804677805e0
@@ -331,3 +331,4 @@ spec-kitty implement WP01
 - 2026-02-23T06:12:54Z – codex – shell_pid=32356 – lane=doing – Started review via workflow command
 - 2026-02-23T06:19:24Z – codex – shell_pid=32356 – lane=planned – Moved to planned
 - 2026-02-23T06:20:48Z – codex – shell_pid=41800 – lane=doing – Started review via workflow command
+- 2026-02-23T06:28:31Z – codex – shell_pid=41800 – lane=done – Review passed: cleaned metadata drift; diff now contains only WP01 deliverables
