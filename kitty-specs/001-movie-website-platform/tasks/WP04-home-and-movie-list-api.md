@@ -14,7 +14,7 @@ subtasks:
 - T020
 phase: Phase 1 - Core Backend API
 assignee: ''
-agent: ''
+agent: "codex"
 shell_pid: "49352"
 review_status: ''
 reviewed_by: ''
@@ -319,3 +319,4 @@ spec-kitty implement WP04 --base WP03
 ## Activity Log
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
+- 2026-02-23T09:17:17Z – codex – shell_pid=49352 – lane=doing – Assigned agent via workflow command
