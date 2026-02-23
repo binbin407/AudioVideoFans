@@ -8,12 +8,12 @@ subtasks:
   - "T011"
 title: ".NET Core 10 DDD Backend Scaffold"
 phase: "Phase 0 - Infrastructure Foundation"
-lane: "doing"
+lane: "done"
 assignee: ""
 agent: "claude"
 shell_pid: "40728"
-review_status: ""
-reviewed_by: ""
+review_status: "approved"
+reviewed_by: "binbin407"
 dependencies: ["WP01"]
 history:
   - timestamp: "2026-02-21T00:00:00Z"
@@ -345,3 +345,4 @@ public async Task<List<Movie>> GetFilteredAsync(string[] genres, ...)
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
 - 2026-02-23T05:48:17Z – unknown – lane=for_review – Ready for review: .NET 10 DDD scaffold implemented; build/run/swagger validated
 - 2026-02-23T05:49:38Z – claude – shell_pid=40728 – lane=doing – Started review via workflow command
+- 2026-02-23T06:10:43Z – claude – shell_pid=40728 – lane=done – Review passed: DDD 4-layer scaffold complete; SqlSugar DI/UoW/repositories/entities in place; dotnet build passed with 0 warnings and 0 errors
