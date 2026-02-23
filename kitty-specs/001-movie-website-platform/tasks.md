@@ -59,7 +59,7 @@
 - [x] T008 定义所有带 SqlSugar 特性的领域实体：Movie、TvSeries、Anime、TvSeason、TvEpisode、AnimeSeason、AnimeEpisode、Person、Credit、Franchise、Keyword、ContentKeyword、MediaVideo、AwardEvent、AwardCeremony、AwardNomination、FeaturedBanner、PendingContent
 - [x] T009 在 Domain 中定义 IRepository\<T\> 泛型接口及专用接口（IMovieRepository、ITvSeriesRepository 等）；在 Infrastructure 中实现 SqlSugarRepository\<T\> 基类
 - [x] T010 配置 SqlSugar DI（Scoped ISqlSugarClient，PgSqlIsAutoToLower = false），实现 IUnitOfWork + UnitOfWork
-- [ ] T011 搭建 Application 层：命令/查询处理器结构（不需要 MediatR；使用直接服务类），所有内容类型的基础 DTO
+- [x] T011 搭建 Application 层：命令/查询处理器结构（不需要 MediatR；使用直接服务类），所有内容类型的基础 DTO
 
 ### 实施说明
 - `PgSqlIsAutoToLower = false` 至关重要——若缺少此配置，SqlSugar 将把列名映射为小写，导致 PostgreSQL 列解析失败
