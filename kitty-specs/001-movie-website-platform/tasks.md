@@ -21,12 +21,12 @@
 **预估规模**: 约 380 行
 
 ### 包含子任务
-- [ ] T001 初始化 monorepo 目录结构（`/frontend`、`/admin`、`/api`、`/crawler`，根目录 CI 配置存根）
-- [ ] T002 编写 PostgreSQL 迁移：核心内容表（`movies`、`tv_series`、`anime`，包含所有列、约束、索引和 FTS 生成列）
-- [ ] T003 编写 PostgreSQL 迁移：季/集表（`tv_seasons`、`tv_episodes`、`anime_seasons`、`anime_episodes`）
-- [ ] T004 编写 PostgreSQL 迁移：people、credits、franchises、keywords、content_keywords
-- [ ] T005 编写 PostgreSQL 迁移：media_videos、award_events/ceremonies/nominations、featured_banners、pending_content、page_views
-- [ ] T006 配置 zhparser FTS：安装扩展，创建 `chinese_zh` TEXT SEARCH CONFIGURATION，验证 `search_vector` 生成列正常工作
+- [x] T001 初始化 monorepo 目录结构（`/frontend`、`/admin`、`/api`、`/crawler`，根目录 CI 配置存根）
+- [x] T002 编写 PostgreSQL 迁移：核心内容表（`movies`、`tv_series`、`anime`，包含所有列、约束、索引和 FTS 生成列）
+- [x] T003 编写 PostgreSQL 迁移：季/集表（`tv_seasons`、`tv_episodes`、`anime_seasons`、`anime_episodes`）
+- [x] T004 编写 PostgreSQL 迁移：people、credits、franchises、keywords、content_keywords
+- [x] T005 编写 PostgreSQL 迁移：media_videos、award_events/ceremonies/nominations、featured_banners、pending_content、page_views
+- [x] T006 配置 zhparser FTS：安装扩展，创建 `chinese_zh` TEXT SEARCH CONFIGURATION，验证 `search_vector` 生成列正常工作
 
 ### 实施说明
 - 在 `api/` 中使用 SqlSugar 进行实体映射与迁移脚本管理；复杂索引、FTS 配置与扩展安装通过原始 SQL 迁移脚本执行
