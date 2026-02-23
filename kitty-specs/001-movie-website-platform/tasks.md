@@ -86,11 +86,11 @@
 **预估规模**: 约 320 行
 
 ### 包含子任务
-- [ ] T012 Redis 缓存服务：实现 `IRedisCache`（Get/Set/Delete/Exists），定义 `CacheKeys` 常量类，键名规范匹配（例如 `movie:detail:{id}`、`movies:list:{hash}`）
-- [ ] T013 腾讯 COS 存储客户端：`ITencentCosClient` 接口 + 上传/删除实现；`CosUrlHelper.GetCdnUrl(cosKey)` 工具方法
-- [ ] T014 全局中间件：`GlobalExceptionMiddleware`（统一捕获 → 结构化错误 JSON）、`RequestLoggingMiddleware`（方法、路径、状态码、耗时）、CORS 策略、带 JWT bearer 的 Swagger/OpenAPI
-- [ ] T015 OAuth 2.0 JWT RS256 鉴权：配置 `AddAuthentication().AddJwtBearer()`，携带 JWKS URI；对所有 `/api/admin/**` 控制器使用 `[Authorize]`
-- [ ] T016 集成 Sentry SDK：在 Program.cs 中调用 `UseSentry()`；通过 `prometheus-net.AspNetCore` 暴露 Prometheus /metrics 端点；在开发模式下验证错误捕获
+- [x] T012 Redis 缓存服务：实现 `IRedisCache`（Get/Set/Delete/Exists），定义 `CacheKeys` 常量类，键名规范匹配（例如 `movie:detail:{id}`、`movies:list:{hash}`）
+- [x] T013 腾讯 COS 存储客户端：`ITencentCosClient` 接口 + 上传/删除实现；`CosUrlHelper.GetCdnUrl(cosKey)` 工具方法
+- [x] T014 全局中间件：`GlobalExceptionMiddleware`（统一捕获 → 结构化错误 JSON）、`RequestLoggingMiddleware`（方法、路径、状态码、耗时）、CORS 策略、带 JWT bearer 的 Swagger/OpenAPI
+- [x] T015 OAuth 2.0 JWT RS256 鉴权：配置 `AddAuthentication().AddJwtBearer()`，携带 JWKS URI；对所有 `/api/admin/**` 控制器使用 `[Authorize]`
+- [x] T016 集成 Sentry SDK：在 Program.cs 中调用 `UseSentry()`；通过 `prometheus-net.AspNetCore` 暴露 Prometheus /metrics 端点；在开发模式下验证错误捕获
 
 ### 实施说明
 - 列表查询的 Redis 键哈希：`MD5(JsonSerializer.Serialize(filterDto))` → 生成简短且确定性的缓存键
