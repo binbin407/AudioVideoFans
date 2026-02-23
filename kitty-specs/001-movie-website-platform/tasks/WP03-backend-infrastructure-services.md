@@ -1,7 +1,7 @@
 ---
 work_package_id: WP03
 title: Backend Infrastructure Services
-lane: "doing"
+lane: "for_review"
 dependencies: [WP02]
 base_branch: 001-movie-website-platform-WP02
 base_commit: 144f7daf3e641e8f67ce316aa5acc55d7d736961
@@ -345,3 +345,4 @@ spec-kitty implement WP03 --base WP02
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
 - 2026-02-23T06:31:42Z – codex – shell_pid=32436 – lane=doing – Assigned agent via workflow command
+- 2026-02-23T08:00:38Z – codex – shell_pid=32436 – lane=for_review – Ready for review: implemented cache service, COS client, middleware, JWT auth, Sentry, and metrics with smoke validation
