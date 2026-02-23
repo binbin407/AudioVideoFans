@@ -1,7 +1,7 @@
 ---
 work_package_id: WP05
 title: Movie Detail API
-lane: "doing"
+lane: "for_review"
 dependencies: [WP04]
 base_branch: 001-movie-website-platform-WP04
 base_commit: 12a010785208453e66f26f3d6c45e736eceb7169
@@ -297,3 +297,4 @@ spec-kitty implement WP05 --base WP04
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
 - 2026-02-23T12:20:57Z – gpt-5.3-codex – shell_pid=60880 – lane=doing – Assigned agent via workflow command
+- 2026-02-23T13:12:37Z – gpt-5.3-codex – shell_pid=60880 – lane=for_review – Ready for review: implemented movie detail, credits grouping, similar content service, and franchise detail API with build passing
