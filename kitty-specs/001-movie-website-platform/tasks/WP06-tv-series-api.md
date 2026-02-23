@@ -15,7 +15,7 @@ subtasks:
 - T028
 phase: Phase 2 - Extended Backend API
 assignee: ''
-agent: ''
+agent: "gpt-5.3-codex"
 shell_pid: "33576"
 review_status: ''
 reviewed_by: ''
@@ -230,3 +230,4 @@ air_status = ANY(@statuses::varchar[])
 ## Activity Log
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
+- 2026-02-23T13:56:24Z – gpt-5.3-codex – shell_pid=33576 – lane=doing – Assigned agent via workflow command
