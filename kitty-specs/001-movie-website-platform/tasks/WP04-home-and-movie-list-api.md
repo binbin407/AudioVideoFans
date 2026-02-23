@@ -1,7 +1,7 @@
 ---
 work_package_id: WP04
 title: Home + Movie List API
-lane: "doing"
+lane: "for_review"
 dependencies:
 - WP02
 base_branch: 001-movie-website-platform-WP02
@@ -320,3 +320,4 @@ spec-kitty implement WP04 --base WP03
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
 - 2026-02-23T09:17:17Z – codex – shell_pid=49352 – lane=doing – Assigned agent via workflow command
+- 2026-02-23T12:09:30Z – codex – shell_pid=49352 – lane=for_review – Ready for review: implemented /api/v1/home and /api/v1/movies with filters, pagination, Redis caching, and admin cache flush endpoint
