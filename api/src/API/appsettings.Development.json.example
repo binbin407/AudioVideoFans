@@ -11,26 +11,12 @@
   "Auth": {
     "JwksUri": "https://auth.example.com/.well-known/openid-configuration",
     "Audience": "moviesite-api",
-    "Issuer": "https://auth.example.com",
-    "RequireHttpsMetadata": true
+    "Issuer": "https://auth.example.com"
   },
   "Sentry": {
     "Dsn": ""
   },
   "Metrics": {
     "Enabled": true
-  },
-  "Cors": {
-    "AllowedOrigins": [
-      "http://localhost:5173",
-      "http://localhost:5174"
-    ]
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*"
+  }
 }
