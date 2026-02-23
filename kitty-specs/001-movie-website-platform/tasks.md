@@ -120,10 +120,10 @@
 **预估规模**: 约 310 行
 
 ### 包含子任务
-- [ ] T017 `GET /api/v1/home`：HomeController + HomeApplicationService——获取有效 FeaturedBanners（start_at/end_at 时间过滤）、热门电影（热度 top 8）、热门电视剧（top 8）、按产地的热门动漫（国漫 top 8，日漫 top 8）；Redis 缓存 `home:banners` 10 分钟
-- [ ] T018 `GET /api/v1/movies`：MovieListQuery，含过滤参数（genre、region、decade、year、lang、评分阈值、sort、page、page_size）；使用原始 SQL 的 PostgreSQL 数组 `&&` 过滤器用于 genres/region/language；Redis 缓存 `movies:list:{hash}` 10 分钟
-- [ ] T019 数组过滤 SQL 辅助工具：`ArrayFilterHelper.BuildWhereClause(filters)` 为 TEXT[] 重叠过滤器生成参数化 SQL 片段；年代到年份范围的转换（2020s → 2020–2029）
-- [ ] T020 缓存失效策略：在任何 Movie 创建/更新后，Application Layer 调用 `_redis.DeletePattern("movies:list:*")` 和 `_redis.Delete(CacheKeys.MovieDetail(id))`
+- [x] T017 `GET /api/v1/home`：HomeController + HomeApplicationService——获取有效 FeaturedBanners（start_at/end_at 时间过滤）、热门电影（热度 top 8）、热门电视剧（top 8）、按产地的热门动漫（国漫 top 8，日漫 top 8）；Redis 缓存 `home:banners` 10 分钟
+- [x] T018 `GET /api/v1/movies`：MovieListQuery，含过滤参数（genre、region、decade、year、lang、评分阈值、sort、page、page_size）；使用原始 SQL 的 PostgreSQL 数组 `&&` 过滤器用于 genres/region/language；Redis 缓存 `movies:list:{hash}` 10 分钟
+- [x] T019 数组过滤 SQL 辅助工具：`ArrayFilterHelper.BuildWhereClause(filters)` 为 TEXT[] 重叠过滤器生成参数化 SQL 片段；年代到年份范围的转换（2020s → 2020–2029）
+- [x] T020 缓存失效策略：在任何 Movie 创建/更新后，Application Layer 调用 `_redis.DeletePattern("movies:list:*")` 和 `_redis.Delete(CacheKeys.MovieDetail(id))`
 
 ### 实施说明
 - 首页端点必须遵守 Banner 的 `start_at ≤ NOW() ≤ end_at`（或 NULL 边界）
