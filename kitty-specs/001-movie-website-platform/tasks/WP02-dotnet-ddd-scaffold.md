@@ -8,7 +8,7 @@ subtasks:
   - "T011"
 title: ".NET Core 10 DDD Backend Scaffold"
 phase: "Phase 0 - Infrastructure Foundation"
-lane: "planned"
+lane: "for_review"
 assignee: ""
 agent: ""
 shell_pid: ""
@@ -343,3 +343,4 @@ public async Task<List<Movie>> GetFilteredAsync(string[] genres, ...)
 ## Activity Log
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
+- 2026-02-23T05:48:17Z – unknown – lane=for_review – Ready for review: .NET 10 DDD scaffold implemented; build/run/swagger validated
