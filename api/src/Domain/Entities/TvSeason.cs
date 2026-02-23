@@ -32,6 +32,9 @@ public sealed class TvSeason
     [SugarColumn(ColumnName = "vote_average")]
     public decimal? VoteAverage { get; set; }
 
+    [SugarColumn(ColumnName = "deleted_at")]
+    public DateTimeOffset? DeletedAt { get; set; }
+
     [SugarColumn(ColumnName = "created_at")]
     public DateTimeOffset CreatedAt { get; set; }
 

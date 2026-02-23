@@ -28,4 +28,7 @@ public sealed class Credit
 
     [SugarColumn(ColumnName = "display_order")]
     public int DisplayOrder { get; set; }
+
+    [SugarColumn(ColumnName = "deleted_at")]
+    public DateTimeOffset? DeletedAt { get; set; }
 }

@@ -1,6 +1,6 @@
 namespace MovieSite.Application.Common;
 
-public sealed record MediaCardDto(
+public record MediaCardDto(
     long Id,
     string ContentType,
     string TitleCn,

@@ -1,6 +1,6 @@
 namespace MovieSite.Application.Common;
 
-public sealed record ContentListFilter(
+public record ContentListFilter(
     string[]? Genres,
     string[]? Regions,
     string? Decade,

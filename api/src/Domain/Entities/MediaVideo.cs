@@ -25,4 +25,7 @@ public sealed class MediaVideo
 
     [SugarColumn(ColumnName = "published_at")]
     public DateOnly? PublishedAt { get; set; }
+
+    [SugarColumn(ColumnName = "deleted_at")]
+    public DateTimeOffset? DeletedAt { get; set; }
 }

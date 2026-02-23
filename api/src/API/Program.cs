@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using MovieSite.API.Middleware;
 using MovieSite.Application.Common;
+using MovieSite.Application.TvSeries;
 using MovieSite.Domain;
 using MovieSite.Domain.Repositories;
 using MovieSite.Infrastructure;
@@ -101,6 +102,7 @@ builder.Services.AddScoped<ISqlSugarClient>(_ =>
 
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<ITvSeriesRepository, TvSeriesRepository>();
+builder.Services.AddScoped<TvSeriesApplicationService>();
 builder.Services.AddScoped<IAnimeRepository, AnimeRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
