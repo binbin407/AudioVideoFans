@@ -14,7 +14,7 @@ subtasks:
 - T016
 phase: Phase 0 - Infrastructure Foundation
 assignee: ''
-agent: ''
+agent: "codex"
 shell_pid: "32436"
 review_status: ''
 reviewed_by: ''
@@ -344,3 +344,4 @@ spec-kitty implement WP03 --base WP02
 ## Activity Log
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
+- 2026-02-23T06:31:42Z – codex – shell_pid=32436 – lane=doing – Assigned agent via workflow command
