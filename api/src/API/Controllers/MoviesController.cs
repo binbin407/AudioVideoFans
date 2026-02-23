@@ -35,4 +35,42 @@ public sealed class MoviesController(MovieApplicationService service) : Controll
         var data = await service.GetMovieListAsync(filter, ct);
         return Ok(data);
     }
+
+    [HttpGet("{id:long}")]
+    public async Task<IActionResult> GetMovieDetailAsync(long id, CancellationToken ct)
+    {
+        var data = await service.GetMovieDetailAsync(id, ct);
+        if (data is null)
+        {
+            return NotFound(new
+            {
+                error = new
+                {
+                    code = "NOT_FOUND",
+                    message = "电影不存在"
+                }
+            });
+        }
+
+        return Ok(data);
+    }
+
+    [HttpGet("{id:long}/credits")]
+    public async Task<IActionResult> GetMovieCreditsAsync(long id, CancellationToken ct)
+    {
+        var data = await service.GetMovieCreditsAsync(id, ct);
+        if (data is null)
+        {
+            return NotFound(new
+            {
+                error = new
+                {
+                    code = "NOT_FOUND",
+                    message = "电影不存在"
+                }
+            });
+        }
+
+        return Ok(data);
+    }
 }

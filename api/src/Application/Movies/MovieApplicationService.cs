@@ -8,9 +8,10 @@ using SqlSugar;
 
 namespace MovieSite.Application.Movies;
 
-public sealed class MovieApplicationService(ISqlSugarClient db, IRedisCache redis)
+public sealed class MovieApplicationService(ISqlSugarClient db, IRedisCache redis, SimilarContentService similarContentService)
 {
     private static readonly TimeSpan ListCacheTtl = TimeSpan.FromMinutes(10);
+    private static readonly TimeSpan DetailCacheTtl = TimeSpan.FromHours(1);
 
     public async Task<PagedResponse<MediaCardDto>> GetMovieListAsync(MovieListFilterDto filter, CancellationToken ct = default)
     {
@@ -112,6 +113,257 @@ public sealed class MovieApplicationService(ISqlSugarClient db, IRedisCache redi
         return result;
     }
 
+    public async Task<MovieDetailDto?> GetMovieDetailAsync(long id, CancellationToken ct = default)
+    {
+        var cacheKey = CacheKeys.MovieDetail(id);
+        var cached = await redis.GetAsync<MovieDetailDto>(cacheKey);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        var movie = await db.Queryable<Movie>()
+            .FirstAsync(x => x.Id == id && x.DeletedAt == null && x.Status == "published");
+
+        if (movie is null)
+        {
+            return null;
+        }
+
+        var castTask = GetMovieCreditGroupAsync(id, "actor", 20);
+        var directorsTask = GetMovieCreditGroupAsync(id, "director", null);
+        var awardsTask = GetAwardsAsync(id);
+        var videosTask = GetVideosAsync(id);
+        var franchiseTask = GetFranchiseRefAsync(movie);
+        var similarTask = similarContentService.GetSimilarAsync("movie", id, 6, ct);
+
+        await Task.WhenAll(castTask, directorsTask, awardsTask, videosTask, franchiseTask, similarTask);
+
+        var detail = new MovieDetailDto(
+            movie.Id,
+            movie.TitleCn,
+            movie.TitleOriginal,
+            movie.TitleAliases ?? Array.Empty<string>(),
+            movie.Tagline,
+            movie.Synopsis,
+            movie.Genres ?? Array.Empty<string>(),
+            movie.Region ?? Array.Empty<string>(),
+            movie.Language ?? Array.Empty<string>(),
+            movie.ReleaseDates ?? new List<MovieSite.Domain.ValueObjects.ReleaseDate>(),
+            movie.Durations ?? new List<MovieSite.Domain.ValueObjects.Duration>(),
+            movie.DoubanScore,
+            movie.DoubanRatingCount,
+            movie.DoubanRatingDist,
+            movie.ImdbScore,
+            movie.ImdbId,
+            movie.PosterCosKey,
+            movie.BackdropCosKey,
+            movie.ExtraBackdrops ?? Array.Empty<string>(),
+            movie.ExtraPosters ?? Array.Empty<string>(),
+            movie.ProductionCompanies ?? Array.Empty<string>(),
+            movie.Distributors ?? Array.Empty<string>(),
+            franchiseTask.Result,
+            castTask.Result,
+            directorsTask.Result,
+            awardsTask.Result,
+            videosTask.Result,
+            similarTask.Result
+        );
+
+        await redis.SetAsync(cacheKey, detail, DetailCacheTtl);
+        return detail;
+    }
+
+    public async Task<CreditsResponseDto?> GetMovieCreditsAsync(long id, CancellationToken ct = default)
+    {
+        var exists = await db.Queryable<Movie>()
+            .AnyAsync(x => x.Id == id && x.DeletedAt == null && x.Status == "published");
+
+        if (!exists)
+        {
+            return null;
+        }
+
+        var sql = @"
+            SELECT
+                c.role AS Role,
+                c.character_name AS CharacterName,
+                c.display_order AS DisplayOrder,
+                p.id AS PersonId,
+                p.name_cn AS NameCn,
+                p.name_en AS NameEn,
+                p.avatar_cos_key AS AvatarCosKey
+            FROM credits c
+            JOIN people p ON p.id = c.person_id
+            WHERE c.content_type = 'movie'
+              AND c.content_id = @movieId
+              AND c.deleted_at IS NULL
+              AND p.deleted_at IS NULL
+            ORDER BY c.display_order ASC";
+
+        var rows = await db.Ado.SqlQueryAsync<CreditRow>(sql, new Dictionary<string, object>
+        {
+            ["movieId"] = id
+        });
+
+        var directors = new List<CreditPersonDto>();
+        var writers = new List<CreditPersonDto>();
+        var cast = new List<CreditPersonDto>();
+        var producers = new List<CreditPersonDto>();
+        var others = new List<CreditPersonDto>();
+
+        foreach (var row in rows)
+        {
+            var dto = new CreditPersonDto(
+                row.PersonId,
+                row.NameCn,
+                row.NameEn,
+                row.AvatarCosKey,
+                row.CharacterName,
+                row.DisplayOrder
+            );
+
+            switch (row.Role)
+            {
+                case "director":
+                    directors.Add(dto);
+                    break;
+                case "writer":
+                    writers.Add(dto);
+                    break;
+                case "actor":
+                    cast.Add(dto);
+                    break;
+                case "producer":
+                    producers.Add(dto);
+                    break;
+                default:
+                    others.Add(dto);
+                    break;
+            }
+        }
+
+        return new CreditsResponseDto(directors, writers, cast, producers, others);
+    }
+
+    private async Task<List<CreditPersonDto>> GetMovieCreditGroupAsync(long movieId, string role, int? limit)
+    {
+        var sql = @"
+            SELECT
+                p.id AS PersonId,
+                p.name_cn AS NameCn,
+                p.name_en AS NameEn,
+                p.avatar_cos_key AS AvatarCosKey,
+                c.character_name AS CharacterName,
+                c.display_order AS DisplayOrder
+            FROM credits c
+            JOIN people p ON p.id = c.person_id
+            WHERE c.content_type = 'movie'
+              AND c.content_id = @movieId
+              AND c.role = @role
+              AND c.deleted_at IS NULL
+              AND p.deleted_at IS NULL
+            ORDER BY c.display_order ASC";
+
+        var rows = await db.Ado.SqlQueryAsync<CreditRow>(sql, new Dictionary<string, object>
+        {
+            ["movieId"] = movieId,
+            ["role"] = role
+        });
+
+        var selected = limit.HasValue ? rows.Take(limit.Value) : rows;
+        return selected.Select(x => new CreditPersonDto(
+            x.PersonId,
+            x.NameCn,
+            x.NameEn,
+            x.AvatarCosKey,
+            x.CharacterName,
+            x.DisplayOrder
+        )).ToList();
+    }
+
+    private async Task<List<AwardItemDto>> GetAwardsAsync(long movieId)
+    {
+        var sql = @"
+            SELECT
+                e.name_cn AS EventName,
+                c.edition_number AS EditionNumber,
+                n.category AS Category,
+                n.is_winner AS IsWinner
+            FROM award_nominations n
+            JOIN award_ceremonies c ON c.id = n.ceremony_id
+            JOIN award_events e ON e.id = c.event_id
+            WHERE n.content_type = 'movie'
+              AND n.content_id = @movieId
+              AND n.deleted_at IS NULL
+              AND c.deleted_at IS NULL
+              AND e.deleted_at IS NULL
+            ORDER BY c.edition_number DESC, e.name_cn ASC
+            LIMIT 50";
+
+        var rows = await db.Ado.SqlQueryAsync<AwardRow>(sql, new Dictionary<string, object>
+        {
+            ["movieId"] = movieId
+        });
+
+        return rows.Select(x => new AwardItemDto(
+            x.EventName,
+            x.EditionNumber,
+            x.Category,
+            x.IsWinner
+        )).ToList();
+    }
+
+    private async Task<List<VideoDto>> GetVideosAsync(long movieId)
+    {
+        var sql = @"
+            SELECT
+                id AS Id,
+                title AS Title,
+                url AS Url,
+                type AS Type,
+                published_at AS PublishedAt
+            FROM media_videos
+            WHERE content_type = 'movie'
+              AND content_id = @movieId
+              AND deleted_at IS NULL
+            ORDER BY published_at DESC NULLS LAST, id DESC";
+
+        var rows = await db.Ado.SqlQueryAsync<VideoRow>(sql, new Dictionary<string, object>
+        {
+            ["movieId"] = movieId
+        });
+
+        return rows.Select(x => new VideoDto(x.Id, x.Title, x.Url, x.Type, x.PublishedAt)).ToList();
+    }
+
+    private async Task<FranchiseRef?> GetFranchiseRefAsync(Movie movie)
+    {
+        if (!movie.FranchiseId.HasValue)
+        {
+            return null;
+        }
+
+        var franchise = await db.Queryable<Franchise>()
+            .FirstAsync(x => x.Id == movie.FranchiseId.Value && x.DeletedAt == null);
+
+        if (franchise is null)
+        {
+            return null;
+        }
+
+        var total = await db.Queryable<Movie>()
+            .Where(x => x.FranchiseId == movie.FranchiseId.Value && x.DeletedAt == null && x.Status == "published")
+            .CountAsync();
+
+        return new FranchiseRef(
+            franchise.Id,
+            franchise.NameCn,
+            movie.FranchiseOrder ?? 0,
+            total
+        );
+    }
+
     private static MovieListFilterDto Normalize(MovieListFilterDto filter)
     {
         var genres = filter.Genres?.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
@@ -186,5 +438,33 @@ public sealed class MovieApplicationService(ISqlSugarClient db, IRedisCache redi
             movie.DoubanScore,
             movie.Genres
         );
+    }
+
+    private sealed class CreditRow
+    {
+        public string Role { get; init; } = string.Empty;
+        public long PersonId { get; init; }
+        public string NameCn { get; init; } = string.Empty;
+        public string? NameEn { get; init; }
+        public string? AvatarCosKey { get; init; }
+        public string? CharacterName { get; init; }
+        public int DisplayOrder { get; init; }
+    }
+
+    private sealed class AwardRow
+    {
+        public string EventName { get; init; } = string.Empty;
+        public int EditionNumber { get; init; }
+        public string Category { get; init; } = string.Empty;
+        public bool IsWinner { get; init; }
+    }
+
+    private sealed class VideoRow
+    {
+        public long Id { get; init; }
+        public string? Title { get; init; }
+        public string Url { get; init; } = string.Empty;
+        public string Type { get; init; } = string.Empty;
+        public DateOnly? PublishedAt { get; init; }
     }
 }
