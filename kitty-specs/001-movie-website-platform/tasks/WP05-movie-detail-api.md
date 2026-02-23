@@ -1,25 +1,28 @@
 ---
-work_package_id: "WP05"
+work_package_id: WP05
+title: Movie Detail API
+lane: "doing"
+dependencies: [WP04]
+base_branch: 001-movie-website-platform-WP04
+base_commit: 12a010785208453e66f26f3d6c45e736eceb7169
+created_at: '2026-02-23T12:20:54.910939+00:00'
 subtasks:
-  - "T021"
-  - "T022"
-  - "T023"
-  - "T024"
-title: "Movie Detail API"
-phase: "Phase 1 - Core Backend API"
-lane: "planned"
-assignee: ""
-agent: ""
-shell_pid: ""
-review_status: ""
-reviewed_by: ""
-dependencies: ["WP04"]
+- T021
+- T022
+- T023
+- T024
+phase: Phase 1 - Core Backend API
+assignee: ''
+agent: ''
+shell_pid: "60880"
+review_status: ''
+reviewed_by: ''
 history:
-  - timestamp: "2026-02-21T00:00:00Z"
-    lane: "planned"
-    agent: "system"
-    shell_pid: ""
-    action: "Prompt generated via /spec-kitty.tasks"
+- timestamp: '2026-02-21T00:00:00Z'
+  lane: planned
+  agent: system
+  shell_pid: ''
+  action: Prompt generated via /spec-kitty.tasks
 ---
 
 # Work Package Prompt: WP05 – Movie Detail API
