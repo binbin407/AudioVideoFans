@@ -1,7 +1,7 @@
 ---
 work_package_id: WP04
 title: Home + Movie List API
-lane: "for_review"
+lane: "doing"
 dependencies:
 - WP02
 base_branch: 001-movie-website-platform-WP02
@@ -15,7 +15,7 @@ subtasks:
 phase: Phase 1 - Core Backend API
 assignee: ''
 agent: "codex"
-shell_pid: "49352"
+shell_pid: "37188"
 review_status: ''
 reviewed_by: ''
 history:
@@ -321,3 +321,4 @@ spec-kitty implement WP04 --base WP03
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
 - 2026-02-23T09:17:17Z – codex – shell_pid=49352 – lane=doing – Assigned agent via workflow command
 - 2026-02-23T12:09:30Z – codex – shell_pid=49352 – lane=for_review – Ready for review: implemented /api/v1/home and /api/v1/movies with filters, pagination, Redis caching, and admin cache flush endpoint
+- 2026-02-23T12:10:41Z – codex – shell_pid=37188 – lane=doing – Started review via workflow command
