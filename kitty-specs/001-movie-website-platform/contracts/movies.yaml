@@ -1,0 +1,242 @@
+openapi: "3.1.0"
+info:
+  title: Movies API
+  version: "1.0"
+
+paths:
+  /api/v1/movies:
+    get:
+      summary: 电影列表（筛选/排序/分页）
+      parameters:
+        - name: genre
+          in: query
+          schema: { type: string }
+          description: 类型（如 sci-fi、action）
+        - name: region
+          in: query
+          schema: { type: string }
+          description: 地区（如 us、cn）
+        - name: decade
+          in: query
+          schema: { type: string, enum: [2020s, 2010s, 2000s, 90s, earlier] }
+        - name: year
+          in: query
+          schema: { type: integer }
+          description: 精确年份筛选
+        - name: lang
+          in: query
+          schema: { type: string }
+          description: 语言（zh-cn、zh-hk、en、ja、ko、other）
+        - name: score
+          in: query
+          schema: { type: number, enum: [7, 8, 9] }
+          description: 最低豆瓣评分（7.0+、8.0+、9.0+）
+        - name: sort
+          in: query
+          schema: { type: string, enum: [douban_score, popularity, release_date] }
+          default: popularity
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: page_size
+          in: query
+          schema: { type: integer, default: 24, maximum: 100 }
+      responses:
+        "200":
+          description: 电影列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/MovieCard' }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+
+  /api/v1/movies/{id}:
+    get:
+      summary: 电影详情
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: 电影详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieDetail'
+        "404":
+          description: 电影不存在
+
+  /api/v1/movies/{id}/credits:
+    get:
+      summary: 全部演职员
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      directors:
+                        type: array
+                        items: { $ref: '#/components/schemas/CreditPerson' }
+                      writers:
+                        type: array
+                        items: { $ref: '#/components/schemas/CreditPerson' }
+                      cast:
+                        type: array
+                        items: { $ref: '#/components/schemas/CreditPerson' }
+
+  /api/v1/movies/{id}/similar:
+    get:
+      summary: 相似电影（6条，按共有关键词/类型匹配）
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    maxItems: 6
+                    items: { $ref: '#/components/schemas/MovieCard' }
+
+components:
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        page: { type: integer }
+        page_size: { type: integer }
+        total: { type: integer }
+        total_pages: { type: integer }
+
+    MovieCard:
+      type: object
+      properties:
+        id: { type: integer }
+        title_cn: { type: string }
+        year: { type: integer }
+        poster_cos_key: { type: string }
+        douban_score: { type: number, nullable: true }
+        genres: { type: array, items: { type: string } }
+
+    CreditPerson:
+      type: object
+      properties:
+        person_id: { type: integer }
+        name_cn: { type: string }
+        avatar_cos_key: { type: string, nullable: true }
+        character_name: { type: string, nullable: true }
+        display_order: { type: integer }
+
+    RatingDist:
+      type: object
+      properties:
+        five: { type: number, description: "力荐 %" }
+        four: { type: number, description: "推荐 %" }
+        three: { type: number, description: "还行 %" }
+        two: { type: number, description: "较差 %" }
+        one: { type: number, description: "很差 %" }
+
+    FranchiseRef:
+      type: object
+      nullable: true
+      properties:
+        id: { type: integer }
+        name_cn: { type: string }
+        order: { type: integer, description: "在系列中的序号" }
+        total: { type: integer, description: "系列总部数" }
+
+    MovieDetail:
+      type: object
+      properties:
+        id: { type: integer }
+        title_cn: { type: string }
+        title_original: { type: string, nullable: true }
+        title_aliases: { type: array, items: { type: string } }
+        synopsis: { type: string, nullable: true }
+        genres: { type: array, items: { type: string } }
+        region: { type: array, items: { type: string } }
+        language: { type: array, items: { type: string } }
+        release_dates:
+          type: array
+          items:
+            type: object
+            properties:
+              region: { type: string }
+              date: { type: string, format: date }
+              type: { type: string }
+        durations:
+          type: array
+          items:
+            type: object
+            properties:
+              version: { type: string }
+              minutes: { type: integer }
+        douban_score: { type: number, nullable: true }
+        douban_rating_count: { type: integer, nullable: true }
+        douban_rating_dist: { $ref: '#/components/schemas/RatingDist', nullable: true }
+        imdb_score: { type: number, nullable: true }
+        imdb_id: { type: string, nullable: true }
+        mtime_scores:
+          type: object
+          nullable: true
+          properties:
+            music: { type: number }
+            visual: { type: number }
+            director: { type: number }
+            story: { type: number }
+            performance: { type: number }
+        poster_cos_key: { type: string, nullable: true }
+        backdrop_cos_key: { type: string, nullable: true }
+        extra_posters: { type: array, items: { type: string } }
+        extra_backdrops: { type: array, items: { type: string } }
+        franchise: { $ref: '#/components/schemas/FranchiseRef' }
+        directors:
+          type: array
+          items: { $ref: '#/components/schemas/CreditPerson' }
+        cast:
+          type: array
+          items: { $ref: '#/components/schemas/CreditPerson' }
+        awards:
+          type: array
+          items:
+            type: object
+            properties:
+              event_cn: { type: string }
+              edition: { type: integer }
+              category: { type: string }
+              is_winner: { type: boolean }
+        videos:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: integer }
+              title: { type: string }
+              url: { type: string }
+              type: { type: string, enum: [trailer, teaser, clip, featurette, behind_the_scenes, bloopers] }
+        similar:
+          type: array
+          maxItems: 6
+          items: { $ref: '#/components/schemas/MovieCard' }

@@ -1,0 +1,150 @@
+openapi: "3.1.0"
+info:
+  title: Search & Rankings API
+  version: "1.0"
+
+paths:
+  /api/v1/search:
+    get:
+      summary: 全站搜索结果
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string, minLength: 1 }
+        - name: type
+          in: query
+          schema: { type: string, enum: [all, movie, tv_series, anime, person] }
+          default: all
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: page_size
+          in: query
+          schema: { type: integer, default: 24 }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/SearchResultItem' }
+                  counts:
+                    type: object
+                    properties:
+                      all: { type: integer }
+                      movie: { type: integer }
+                      tv_series: { type: integer }
+                      anime: { type: integer }
+                      person: { type: integer }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+
+  /api/v1/search/autocomplete:
+    get:
+      summary: 搜索自动补全（每类最多3条）
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      movies:
+                        type: array
+                        maxItems: 3
+                        items: { $ref: '#/components/schemas/AutocompleteItem' }
+                      tv_series:
+                        type: array
+                        maxItems: 3
+                        items: { $ref: '#/components/schemas/AutocompleteItem' }
+                      anime:
+                        type: array
+                        maxItems: 3
+                        items: { $ref: '#/components/schemas/AutocompleteItem' }
+                      people:
+                        type: array
+                        maxItems: 3
+                        items: { $ref: '#/components/schemas/AutocompleteItem' }
+                      see_all_url: { type: string }
+
+  /api/v1/rankings:
+    get:
+      summary: 排行榜（电影/电视剧/动漫 × 热门/高分）
+      parameters:
+        - name: content_type
+          in: query
+          schema: { type: string, enum: [movie, tv_series, anime] }
+          default: movie
+        - name: rank_type
+          in: query
+          schema: { type: string, enum: [score, hot] }
+          default: score
+        - name: genre
+          in: query
+          schema: { type: string }
+          description: 按类型筛选（可选）
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    maxItems: 100
+                    items: { $ref: '#/components/schemas/RankingItem' }
+
+components:
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        page: { type: integer }
+        page_size: { type: integer }
+        total: { type: integer }
+        total_pages: { type: integer }
+
+    SearchResultItem:
+      type: object
+      properties:
+        id: { type: integer }
+        content_type: { type: string, enum: [movie, tv_series, anime, person] }
+        title_cn: { type: string }
+        year: { type: integer, nullable: true }
+        poster_cos_key: { type: string, nullable: true }
+        synopsis_preview: { type: string, description: "简介前60字" }
+        douban_score: { type: number, nullable: true }
+        genres: { type: array, items: { type: string } }
+
+    AutocompleteItem:
+      type: object
+      properties:
+        id: { type: integer }
+        content_type: { type: string }
+        title_cn: { type: string }
+        year: { type: integer, nullable: true }
+        poster_cos_key: { type: string, nullable: true }
+
+    RankingItem:
+      type: object
+      properties:
+        rank: { type: integer }
+        id: { type: integer }
+        content_type: { type: string }
+        title_cn: { type: string }
+        year: { type: integer }
+        poster_cos_key: { type: string, nullable: true }
+        douban_score: { type: number, nullable: true }
+        genres: { type: array, items: { type: string } }

@@ -1,0 +1,344 @@
+openapi: "3.1.0"
+info:
+  title: Admin API
+  version: "1.0"
+  description: 所有接口需要 Bearer JWT Token（OAuth 2.0 Authorization Code + PKCE）
+
+security:
+  - bearerAuth: []
+
+paths:
+  /api/v1/admin/stats:
+    get:
+      summary: 各类型内容数量统计概览
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      movies: { type: integer }
+                      tv_series: { type: integer }
+                      anime: { type: integer }
+                      people: { type: integer }
+                      pending: { type: integer }
+
+  /api/v1/admin/movies:
+    post:
+      summary: 新增电影（直接 published，无需审核）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/MovieWriteDto' }
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/MovieWriteResult' }
+        "422":
+          description: 表单验证失败
+
+  /api/v1/admin/movies/{id}:
+    put:
+      summary: 编辑电影
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/MovieWriteDto' }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/MovieWriteResult' }
+    delete:
+      summary: 软删除电影
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: 已软删除
+
+  /api/v1/admin/pending:
+    get:
+      summary: 爬虫待审核列表
+      parameters:
+        - name: status
+          in: query
+          schema: { type: string, enum: [pending, approved, rejected] }
+          default: pending
+        - name: content_type
+          in: query
+          schema: { type: string, enum: [movie, tv_series, anime, person] }
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/PendingItem' }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+
+  /api/v1/admin/pending/{id}:
+    get:
+      summary: 查看待审核详情（含 raw_data）
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/PendingDetail' }
+
+  /api/v1/admin/pending/{id}/approve:
+    post:
+      summary: 审核通过（返回预填充的编辑表单数据，管理员核查后提交）
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: 返回从 raw_data 映射的预填充表单数据
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  prefilled_form:
+                    type: object
+                    description: 与 MovieWriteDto / TvSeriesWriteDto 等结构一致的预填充数据
+                  content_type: { type: string }
+                  pending_id: { type: integer }
+
+  /api/v1/admin/pending/{id}/reject:
+    post:
+      summary: 拒绝审核
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: 已拒绝
+
+  /api/v1/admin/pending/{id}/reset:
+    post:
+      summary: 重置 rejected → pending
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: 已重置为 pending
+
+  /api/v1/admin/pending/bulk-approve:
+    post:
+      summary: 批量通过（返回各条目预填充数据列表）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items: { type: integer }
+                  minItems: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        pending_id: { type: integer }
+                        prefilled_form: { type: object }
+                        content_type: { type: string }
+
+  /api/v1/admin/banners:
+    get:
+      summary: Banner 列表（含已过期条目）
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/BannerItem' }
+    post:
+      summary: 新增 Banner 条目
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BannerWriteDto' }
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/BannerItem' }
+
+  /api/v1/admin/banners/{id}:
+    put:
+      summary: 编辑 Banner（顺序/时间段）
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BannerWriteDto' }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/BannerItem' }
+    delete:
+      summary: 删除 Banner 条目
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: 已删除
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        page: { type: integer }
+        page_size: { type: integer }
+        total: { type: integer }
+        total_pages: { type: integer }
+
+    MovieWriteDto:
+      type: object
+      required: [title_cn]
+      properties:
+        title_cn: { type: string, maxLength: 200 }
+        title_original: { type: string, nullable: true }
+        title_aliases: { type: array, items: { type: string } }
+        synopsis: { type: string, nullable: true }
+        genres: { type: array, items: { type: string } }
+        region: { type: array, items: { type: string } }
+        language: { type: array, items: { type: string } }
+        release_dates: { type: array }
+        durations: { type: array }
+        douban_score: { type: number, nullable: true }
+        douban_rating_count: { type: integer, nullable: true }
+        imdb_score: { type: number, nullable: true }
+        imdb_id: { type: string, nullable: true }
+        poster_cos_key: { type: string, nullable: true }
+        backdrop_cos_key: { type: string, nullable: true }
+        franchise_id: { type: integer, nullable: true }
+        franchise_order: { type: integer, nullable: true }
+
+    MovieWriteResult:
+      type: object
+      properties:
+        id: { type: integer }
+        title_cn: { type: string }
+        status: { type: string }
+
+    PendingItem:
+      type: object
+      properties:
+        id: { type: integer }
+        source: { type: string }
+        source_url: { type: string }
+        content_type: { type: string }
+        review_status: { type: string }
+        created_at: { type: string, format: date-time }
+
+    PendingDetail:
+      allOf:
+        - $ref: '#/components/schemas/PendingItem'
+        - type: object
+          properties:
+            raw_data: { type: object }
+
+    BannerItem:
+      type: object
+      properties:
+        id: { type: integer }
+        content_type: { type: string }
+        content_id: { type: integer }
+        content_title_cn: { type: string }
+        content_poster_cos_key: { type: string, nullable: true }
+        display_order: { type: integer }
+        start_at: { type: string, format: date-time, nullable: true }
+        end_at: { type: string, format: date-time, nullable: true }
+        is_active: { type: boolean }
+
+    BannerWriteDto:
+      type: object
+      required: [content_type, content_id, display_order]
+      properties:
+        content_type: { type: string, enum: [movie, tv_series, anime] }
+        content_id: { type: integer }
+        display_order: { type: integer, minimum: 0 }
+        start_at: { type: string, format: date-time, nullable: true }
+        end_at: { type: string, format: date-time, nullable: true }
