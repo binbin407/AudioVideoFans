@@ -15,7 +15,7 @@ subtasks:
 - T006
 phase: Phase 0 - Infrastructure Foundation
 assignee: ''
-agent: ''
+agent: "claude"
 shell_pid: "25052"
 review_status: ''
 reviewed_by: ''
@@ -272,3 +272,4 @@ spec-kitty implement WP01
 > **CRITICAL**: Activity log entries MUST be in chronological order (oldest first, newest last).
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
+- 2026-02-23T01:14:37Z – claude – shell_pid=25052 – lane=doing – Assigned agent via workflow command
