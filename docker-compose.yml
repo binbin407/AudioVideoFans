@@ -1,0 +1,12 @@
+version: '3.9'
+
+# WP01 stub only. Full service definitions will be completed in WP26.
+# Planned services:
+# - postgres (PostgreSQL 15 + zhparser)
+# - redis
+# - api (.NET 10 Web API)
+# - frontend (Nginx static hosting)
+# - admin (Nginx static hosting)
+# - crawler (scheduled Scrapy jobs)
+
+services: {}
