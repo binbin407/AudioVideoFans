@@ -151,10 +151,10 @@
 **预估规模**: 约 300 行
 
 ### 包含子任务
-- [ ] T021 `GET /api/v1/movies/:id`：组装 MovieDetailDto——基础字段 + franchise（含序号/总数）、主演（按 display_order 前 20）、导演、奖项（该电影在各届颁奖典礼的所有提名）、视频（按类型）、相似内容（6 条）、extra_posters/backdrops；Redis 缓存 `movie:detail:{id}` 1 小时
-- [ ] T022 `GET /api/v1/movies/:id/credits`：按部门分组的完整分页演职员表（导演/编剧/主演/制片人/其他）；不使用 Redis 缓存（访问频率低）
-- [ ] T023 `SimilarContentService`：给定（content_type、content_id），查找最多 6 条相似内容——排序优先级固定为：关键词重叠数量 DESC → genre 重叠度 DESC → publish_time DESC → content_id ASC（最终稳定 tie-breaker）；排除自身；遵守软删除和 status=published
-- [ ] T024 `GET /api/v1/franchises/:id`：FranchiseDetailDto——系列信息 + 该 franchise_id 的所有电影，按 franchise_order ASC 排序，包含海报/标题/年份/douban_score
+- [x] T021 `GET /api/v1/movies/:id`：组装 MovieDetailDto——基础字段 + franchise（含序号/总数）、主演（按 display_order 前 20）、导演、奖项（该电影在各届颁奖典礼的所有提名）、视频（按类型）、相似内容（6 条）、extra_posters/backdrops；Redis 缓存 `movie:detail:{id}` 1 小时
+- [x] T022 `GET /api/v1/movies/:id/credits`：按部门分组的完整分页演职员表（导演/编剧/主演/制片人/其他）；不使用 Redis 缓存（访问频率低）
+- [x] T023 `SimilarContentService`：给定（content_type、content_id），查找最多 6 条相似内容——排序优先级固定为：关键词重叠数量 DESC → genre 重叠度 DESC → publish_time DESC → content_id ASC（最终稳定 tie-breaker）；排除自身；遵守软删除和 status=published
+- [x] T024 `GET /api/v1/franchises/:id`：FranchiseDetailDto——系列信息 + 该 franchise_id 的所有电影，按 franchise_order ASC 排序，包含海报/标题/年份/douban_score
 
 ### 实施说明
 - 当 `franchise_id IS NULL` 时，`MovieDetailDto.franchise` 为 null——不包含空对象
