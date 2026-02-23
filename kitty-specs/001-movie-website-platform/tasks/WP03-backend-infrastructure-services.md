@@ -1,26 +1,29 @@
 ---
-work_package_id: "WP03"
+work_package_id: WP03
+title: Backend Infrastructure Services
+lane: "doing"
+dependencies: [WP02]
+base_branch: 001-movie-website-platform-WP02
+base_commit: 144f7daf3e641e8f67ce316aa5acc55d7d736961
+created_at: '2026-02-23T06:31:40.639694+00:00'
 subtasks:
-  - "T012"
-  - "T013"
-  - "T014"
-  - "T015"
-  - "T016"
-title: "Backend Infrastructure Services"
-phase: "Phase 0 - Infrastructure Foundation"
-lane: "planned"
-assignee: ""
-agent: ""
-shell_pid: ""
-review_status: ""
-reviewed_by: ""
-dependencies: ["WP02"]
+- T012
+- T013
+- T014
+- T015
+- T016
+phase: Phase 0 - Infrastructure Foundation
+assignee: ''
+agent: ''
+shell_pid: "32436"
+review_status: ''
+reviewed_by: ''
 history:
-  - timestamp: "2026-02-21T00:00:00Z"
-    lane: "planned"
-    agent: "system"
-    shell_pid: ""
-    action: "Prompt generated via /spec-kitty.tasks"
+- timestamp: '2026-02-21T00:00:00Z'
+  lane: planned
+  agent: system
+  shell_pid: ''
+  action: Prompt generated via /spec-kitty.tasks
 ---
 
 # Work Package Prompt: WP03 – Backend Infrastructure Services
