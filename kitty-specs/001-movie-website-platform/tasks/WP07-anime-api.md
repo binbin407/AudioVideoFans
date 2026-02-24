@@ -1,7 +1,7 @@
 ---
 work_package_id: WP07
 title: Anime API
-lane: "for_review"
+lane: "doing"
 dependencies:
 - WP02
 - WP03
@@ -16,7 +16,7 @@ subtasks:
 phase: Phase 2 - Extended Backend API
 assignee: ''
 agent: "gpt-5.3-codex"
-shell_pid: "13304"
+shell_pid: "28872"
 review_status: ''
 reviewed_by: ''
 history:
@@ -212,3 +212,4 @@ private static string SourceMaterialLabel(string? sm) => sm switch
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
 - 2026-02-24T01:26:08Z – gpt-5.3-codex – shell_pid=13304 – lane=doing – Assigned agent via workflow command
 - 2026-02-24T02:57:10Z – gpt-5.3-codex – shell_pid=13304 – lane=for_review – Ready for review: implemented anime list/detail/season/similar API with repository queries, DTOs, caching, and controller endpoints; build passes.
+- 2026-02-24T03:00:41Z – gpt-5.3-codex – shell_pid=28872 – lane=doing – Started review via workflow command
