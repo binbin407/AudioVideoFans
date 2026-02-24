@@ -212,7 +212,7 @@
 - [x] T030 `GET /api/v1/anime/:id`：AnimeDetailDto——所有基础字段 + `origin`、`studio`、`source_material` 字段；季摘要中配音演员演职员与其他演职员分开；Redis 缓存 `anime:detail:{id}` 1 小时
 - [x] T031 `GET /api/v1/anime/:id/seasons/:season_number`：AnimeSeason 详情，包含完整集列表及上一季/下一季导航（结构与 TV 季相同）
 - [x] T032 `GET /api/v1/anime/:id/similar`：复用 SimilarContentService（content_type='anime'）
-- [ ] T132 `GET /api/v1/anime/:id/credits`：返回按部门分组的完整演职员列表，配音演员保留 `character_name`
+- [x] T132 `GET /api/v1/anime/:id/credits`：返回按部门分组的完整演职员列表，配音演员保留 `character_name`
 
 ### 实施说明
 - 配音演员（role='voice_actor'）必须单独返回，演职员中包含 `character_name` 字段
