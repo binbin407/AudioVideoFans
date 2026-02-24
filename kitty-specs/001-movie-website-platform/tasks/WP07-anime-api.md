@@ -15,7 +15,7 @@ subtasks:
 - T032
 phase: Phase 2 - Extended Backend API
 assignee: ''
-agent: ''
+agent: "gpt-5.3-codex"
 shell_pid: "13304"
 review_status: ''
 reviewed_by: ''
@@ -210,3 +210,4 @@ private static string SourceMaterialLabel(string? sm) => sm switch
 ## Activity Log
 
 - 2026-02-21T00:00:00Z – system – lane=planned – Prompt created.
+- 2026-02-24T01:26:08Z – gpt-5.3-codex – shell_pid=13304 – lane=doing – Assigned agent via workflow command
