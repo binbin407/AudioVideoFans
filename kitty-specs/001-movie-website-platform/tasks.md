@@ -208,10 +208,10 @@
 **预估规模**: 约 290 行
 
 ### 包含子任务
-- [ ] T029 `GET /api/v1/anime`：AnimeListQuery——所有标准过滤器 + `origin`（cn/jp/other）+ `source_material`（original/manga/novel/game）；Redis 缓存 `anime:list:{hash}` 10 分钟
-- [ ] T030 `GET /api/v1/anime/:id`：AnimeDetailDto——所有基础字段 + `origin`、`studio`、`source_material` 字段；季摘要中配音演员演职员与其他演职员分开；Redis 缓存 `anime:detail:{id}` 1 小时
-- [ ] T031 `GET /api/v1/anime/:id/seasons/:season_number`：AnimeSeason 详情，包含完整集列表及上一季/下一季导航（结构与 TV 季相同）
-- [ ] T032 `GET /api/v1/anime/:id/similar`：复用 SimilarContentService（content_type='anime'）
+- [x] T029 `GET /api/v1/anime`：AnimeListQuery——所有标准过滤器 + `origin`（cn/jp/other）+ `source_material`（original/manga/novel/game）；Redis 缓存 `anime:list:{hash}` 10 分钟
+- [x] T030 `GET /api/v1/anime/:id`：AnimeDetailDto——所有基础字段 + `origin`、`studio`、`source_material` 字段；季摘要中配音演员演职员与其他演职员分开；Redis 缓存 `anime:detail:{id}` 1 小时
+- [x] T031 `GET /api/v1/anime/:id/seasons/:season_number`：AnimeSeason 详情，包含完整集列表及上一季/下一季导航（结构与 TV 季相同）
+- [x] T032 `GET /api/v1/anime/:id/similar`：复用 SimilarContentService（content_type='anime'）
 - [ ] T132 `GET /api/v1/anime/:id/credits`：返回按部门分组的完整演职员列表，配音演员保留 `character_name`
 
 ### 实施说明
