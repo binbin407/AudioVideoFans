@@ -1,10 +1,13 @@
 ---
 work_package_id: WP07
 title: Anime API
-lane: planned
+lane: "doing"
 dependencies:
 - WP02
 - WP03
+base_branch: 001-movie-website-platform-WP07-merge-base
+base_commit: c010a56dcf7f127f65793292406e29ff4290a5f8
+created_at: '2026-02-24T01:26:04.658454+00:00'
 subtasks:
 - T029
 - T030
@@ -13,7 +16,7 @@ subtasks:
 phase: Phase 2 - Extended Backend API
 assignee: ''
 agent: ''
-shell_pid: ''
+shell_pid: "13304"
 review_status: ''
 reviewed_by: ''
 history:
