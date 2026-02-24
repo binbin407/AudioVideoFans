@@ -1,7 +1,7 @@
 ---
 work_package_id: WP07
 title: Anime API
-lane: "doing"
+lane: "done"
 dependencies:
 - WP02
 - WP03
@@ -240,3 +240,4 @@ private static string SourceMaterialLabel(string? sm) => sm switch
 - 2026-02-24T03:18:08Z – gpt-5.3-codex – shell_pid=28872 – lane=planned – Moved to planned
 - 2026-02-24T03:51:30Z – gpt-5.3-codex – shell_pid=28872 – lane=for_review – Ready for review: fixed standard anime filters (regions/decade/language chain), added anime region/language schema+entity support, and added source_material query compatibility in API binding; dotnet build passed.
 - 2026-02-24T03:52:59Z – gpt-5.3-codex – shell_pid=2672 – lane=doing – Started review via workflow command
+- 2026-02-24T03:58:25Z – gpt-5.3-codex – shell_pid=2672 – lane=done – Review passed: blocking filter issues resolved (regions/decade/language chain + source_material binding compatibility), schema/entity aligned for anime region/language, dotnet build passed.
