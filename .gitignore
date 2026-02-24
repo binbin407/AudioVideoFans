@@ -38,3 +38,8 @@ venv/
 
 # Local settings
 settings_local.py
+.kittify/workspaces/001-movie-website-platform-WP03.json
+.kittify/workspaces/001-movie-website-platform-WP04.json
+.kittify/workspaces/001-movie-website-platform-WP05.json
+.kittify/workspaces/001-movie-website-platform-WP06.json
+.kittify/workspaces/001-movie-website-platform-WP07.json
