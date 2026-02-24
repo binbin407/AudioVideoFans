@@ -1,7 +1,7 @@
 ---
 work_package_id: WP07
 title: Anime API
-lane: "doing"
+lane: "planned"
 dependencies:
 - WP02
 - WP03
@@ -17,8 +17,8 @@ phase: Phase 2 - Extended Backend API
 assignee: ''
 agent: "gpt-5.3-codex"
 shell_pid: "28872"
-review_status: ''
-reviewed_by: ''
+review_status: "has_feedback"
+reviewed_by: "binbin407"
 history:
 - timestamp: '2026-02-21T00:00:00Z'
   lane: planned
@@ -37,9 +37,33 @@ history:
 
 ## Review Feedback
 
-*[Empty – no feedback yet.]*
+**Reviewed by**: binbin407
+**Status**: ❌ Changes Requested
+**Date**: 2026-02-24
 
----
+**Issue 1 (blocking): GET /api/v1/anime list does not implement all standard filters declared by ContentListFilter.**
+
+- **Why this blocks approval**: WP07 requires `origin`/`source_material` in addition to all standard filters. Current implementation only forwards `genres`, `year`, `minScore` and omits `regions`, `decade`, `language`.
+- **Where**:
+  - `api/src/Application/Anime/AnimeApplicationService.cs` in `GetAnimeListAsync` (repository call arguments)
+  - `api/src/Infrastructure/Persistence/AnimeRepository.cs` in `GetPagedListAsync` signature and SQL
+- **Required fix**:
+  1. Extend `IAnimeRepository.GetPagedListAsync` to accept standard filters: `regions`, `decade`, `language` (alongside existing filters).
+  2. Pass those filters from `AnimeApplicationService.GetAnimeListAsync`.
+  3. Implement SQL predicates in `AnimeRepository` for these filters (consistent with schema and existing filtering conventions).
+
+**Issue 2 (blocking): query parameter name for source material likely mismatches expected API contract.**
+
+- **Why this blocks approval**: WP07 objective and examples use `source_material` in query, but DTO property is `SourceMaterial` without explicit `[FromQuery(Name = "source_material")]`. This can make `?source_material=manga` not bind as expected.
+- **Where**:
+  - `api/src/Application/Anime/DTOs/AnimeListFilterDto.cs`
+- **Required fix**:
+  - Ensure request query `source_material` maps correctly (e.g., with `[FromQuery(Name = "source_material")]` on property/parameter model or an equivalent binding-safe approach).
+
+After fixes, re-run:
+- `dotnet build api/MovieSite.sln`
+- verify list endpoint with `origin` + `source_material` + standard filters combined.
+
 
 ## Implementation Command
 
@@ -213,3 +237,4 @@ private static string SourceMaterialLabel(string? sm) => sm switch
 - 2026-02-24T01:26:08Z – gpt-5.3-codex – shell_pid=13304 – lane=doing – Assigned agent via workflow command
 - 2026-02-24T02:57:10Z – gpt-5.3-codex – shell_pid=13304 – lane=for_review – Ready for review: implemented anime list/detail/season/similar API with repository queries, DTOs, caching, and controller endpoints; build passes.
 - 2026-02-24T03:00:41Z – gpt-5.3-codex – shell_pid=28872 – lane=doing – Started review via workflow command
+- 2026-02-24T03:18:08Z – gpt-5.3-codex – shell_pid=28872 – lane=planned – Moved to planned
